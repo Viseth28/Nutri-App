@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">NutriApp</string>
+    <string name="title_activity_main">NutriApp</string>
+    <string name="package_name">com.viseth28.nutriapp</string>
+    <string name="custom_url_scheme">com.viseth28.nutriapp</string>
+</resources>
