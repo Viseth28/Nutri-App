@@ -6,6 +6,12 @@ const getBaseUrl = (): string => {
   if (import.meta.env && import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
   }
+  if (typeof window !== "undefined" && window.location) {
+    const origin = window.location.origin;
+    if (!origin.includes("localhost") && !origin.includes("127.0.0.1")) {
+      return origin;
+    }
+  }
   return DEFAULT_API_BASE;
 };
 
