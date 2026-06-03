@@ -80,9 +80,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
         {/* Dynamic Macro breakdown */}
         <div className="macros-bar-container">
-          <div className="macro-segment" style={{ width: `${pPercent}%`, backgroundColor: '#3b82f6' }} />
-          <div className="macro-segment" style={{ width: `${cPercent}%`, backgroundColor: '#eab308' }} />
-          <div className="macro-segment" style={{ width: `${fPercent}%`, backgroundColor: '#ef4444' }} />
+          <div className="macro-segment" style={{ width: `${pPercent}%`, backgroundColor: '#9061f9' }} />
+          <div className="macro-segment" style={{ width: `${cPercent}%`, backgroundColor: '#f43f5e' }} />
+          <div className="macro-segment" style={{ width: `${fPercent}%`, backgroundColor: '#f97316' }} />
         </div>
 
         <div className="macro-labels">
