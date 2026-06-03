@@ -13,9 +13,11 @@ import { Dashboard } from './components/Dashboard';
 import { Suggest } from './components/Suggest';
 import { WeightTracker } from './components/WeightTracker';
 import { ProfileSetup } from './components/ProfileSetup';
+import { api } from './services/api';
 
 interface MealLog {
   id: string;
+  meal_id?: number;
   name: string;
   calories: number;
   protein: number;
@@ -33,14 +35,45 @@ interface Profile {
   goal_type: string;
 }
 
+// ---------------------------------------------------------
+// Telegram SDK Integration
+// ---------------------------------------------------------
+let telegramUserId: number | null = null;
+if (typeof window !== 'undefined' && (window as any).Telegram && (window as any).Telegram.WebApp) {
+  const tgWebApp = (window as any).Telegram.WebApp;
+  try {
+    tgWebApp.ready();
+    if (tgWebApp.initDataUnsafe && tgWebApp.initDataUnsafe.user) {
+      telegramUserId = tgWebApp.initDataUnsafe.user.id;
+    }
+  } catch (err) {
+    console.error("Error initializing Telegram WebApp SDK:", err);
+  }
+}
+
+// Fallback to query parameter '?user_id=...' in standard web browser
+if (!telegramUserId && typeof window !== 'undefined') {
+  const urlParams = new URLSearchParams(window.location.search);
+  const qId = urlParams.get('user_id');
+  if (qId) {
+    telegramUserId = parseInt(qId);
+  }
+}
+
+// Default to a test user ID (562180371) if no active Telegram session or param is found
+const ACTIVE_USER_ID = telegramUserId || 562180371;
+
 const App: React.FC = () => {
   // Global State
+  const [userId] = useState<number>(ACTIVE_USER_ID);
   const [activeTab, setActiveTab] = useState<'home' | 'suggest' | 'weight' | 'profile'>('home');
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [logs, setLogs] = useState<MealLog[]>([]);
   const [burned, setBurned] = useState<number>(0);
   const [targetCal, setTargetCal] = useState<number>(2000);
   const [noSweetToday, setNoSweetToday] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   // Weight & Profile States
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -56,76 +89,79 @@ const App: React.FC = () => {
   const [cameraLoading, setCameraLoading] = useState(false);
   const [cameraResult, setCameraResult] = useState<any | null>(null);
 
-  // Set default initial data on load
-  useEffect(() => {
-    // Load some mock data for a full, premium initial look
-    setLogs([
-      { id: '1', name: '🍳 ស៊ុតស្ងោរ ២ គ្រាប់', calories: 155, protein: 13, carbs: 1, fat: 11, time: '08:15' },
-      { id: '2', name: '🥤 កាហ្វេខ្មៅឥតស្ករ', calories: 5, protein: 0, carbs: 0, fat: 0, time: '08:30' },
-      { id: '3', name: '🍛 បាយសាច់ជ្រូកអាំង (ផ្សារខ្មែរ)', calories: 550, protein: 28, carbs: 65, fat: 18, time: '12:10' }
-    ]);
-    setBurned(350);
-    setTargetCal(2365);
-    setNoSweetToday(true);
-    setProfile({
-      gender: 'male',
-      age: 23,
-      height: 177,
-      weight: 96,
-      activity: 'moderate',
-      goal_type: 'weight_loss'
-    });
-    setPreviousWeight(98.5);
-  }, []);
-
-  // Update calories on Profile changes
-  const handleSaveProfile = (newProfile: Profile, calculatedTarget: number) => {
-    setProfile(newProfile);
-    setPreviousWeight(profile ? profile.weight : null);
-    setTargetCal(calculatedTarget);
+  // Load live data from the FastAPI backend using Turso SQLite
+  const loadDashboardData = async (uid: number) => {
+    try {
+      setLoading(true);
+      const data = await api.getDashboard(uid);
+      
+      setLogs(data.today_meals);
+      setBurned(data.total_burn);
+      setTargetCal(data.goal);
+      setNoSweetToday(data.no_sweet_today);
+      setProfile(data.profile);
+      if (data.profile) {
+        setPreviousWeight(data.profile.weight);
+      }
+      setErrorMsg(null);
+    } catch (err: any) {
+      console.error("Error retrieving user database logs:", err);
+      setErrorMsg("មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធទិន្នន័យបានឡើយ។");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Recalculate TDEE manually when weight changes from WeightTracker
-  const handleUpdateWeight = (newWeight: number) => {
-    if (profile) {
-      const oldWeight = profile.weight;
-      const updatedProfile = { ...profile, weight: newWeight };
-      setProfile(updatedProfile);
-      setPreviousWeight(oldWeight);
+  useEffect(() => {
+    loadDashboardData(userId);
+  }, [userId]);
 
-      // Recalculate Mifflin-St Jeor TDEE instantly
-      let bmr = 0;
-      if (profile.gender === 'male') {
-        bmr = 10 * newWeight + 6.25 * profile.height - 5 * profile.age + 5;
-      } else {
-        bmr = 10 * newWeight + 6.25 * profile.height - 5 * profile.age - 161;
-      }
-
-      let multiplier = 1.2;
-      if (profile.activity === 'sedentary') multiplier = 1.2;
-      else if (profile.activity === 'light') multiplier = 1.375;
-      else if (profile.activity === 'moderate') multiplier = 1.465;
-      else if (profile.activity === 'active') multiplier = 1.55;
-      else if (profile.activity === 'very_active') multiplier = 1.725;
-
-      let offset = 0;
-      if (profile.goal_type === 'mild_loss') offset = -250;
-      else if (profile.goal_type === 'weight_loss') offset = -500;
-      else if (profile.goal_type === 'extreme_loss') offset = -1000;
-
-      const newTarget = Math.max(1200, Math.round(bmr * multiplier) + offset);
-      setTargetCal(newTarget);
-    } else {
-      setPreviousWeight(profile ? (profile as Profile).weight : 70);
-      setProfile({
-        gender: 'male',
-        age: 25,
-        height: 170,
-        weight: newWeight,
-        activity: 'moderate',
-        goal_type: 'weight_loss'
+  // Save profile and recalculated target calories to the backend
+  const handleSaveProfile = async (newProfile: Profile, _calculatedTarget: number) => {
+    try {
+      setLoading(true);
+      const res = await api.updateProfile(userId, {
+        gender: newProfile.gender,
+        age: newProfile.age,
+        height: newProfile.height,
+        weight: newProfile.weight,
+        activity: newProfile.activity,
+        goal_type: newProfile.goal_type
       });
-      setTargetCal(1800);
+      if (res.ok) {
+        setProfile(newProfile);
+        setPreviousWeight(newProfile.weight);
+        if (res.new_goal) setTargetCal(res.new_goal);
+        await loadDashboardData(userId);
+      } else {
+        alert(res.error || "បរាជ័យក្នុងការរក្សាទុក");
+      }
+    } catch (err) {
+      alert("មានបញ្ហា៖ " + err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update weight and trigger calorie target adjustments dynamically
+  const handleUpdateWeight = async (newWeight: number) => {
+    try {
+      setLoading(true);
+      const res = await api.updateWeight(userId, newWeight);
+      if (res.ok) {
+        if (res.new_goal) setTargetCal(res.new_goal);
+        if (profile) {
+          setPreviousWeight(profile.weight);
+          setProfile({ ...profile, weight: newWeight });
+        }
+        await loadDashboardData(userId);
+      } else {
+        alert(res.error || "បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាព");
+      }
+    } catch (err) {
+      alert("មានបញ្ហា៖ " + err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,74 +174,94 @@ const App: React.FC = () => {
     return `📅 ${year}-${month}-${day}`;
   };
 
-  // Switch Challenge Toggle
-  const handleToggleSweet = () => {
-    setNoSweetToday(!noSweetToday);
+  // Toggle Sweet Drink Challenge
+  const handleToggleSweet = async () => {
+    const newVal = !noSweetToday;
+    try {
+      const res = await api.toggleNoSweet(userId, newVal);
+      if (res.ok) {
+        setNoSweetToday(newVal);
+      }
+    } catch (err) {
+      alert("មានបញ្ហាក្នុងការកត់ត្រា៖ " + err);
+    }
   };
 
-  // Logs Operations
-  const handleDeleteLog = (id: string) => {
-    setLogs(logs.filter(item => item.id !== id));
+  // Delete logged meal entries
+  const handleDeleteLog = async (id: string) => {
+    const logItem = logs.find(item => item.id === id);
+    if (logItem && logItem.meal_id) {
+      try {
+        setLoading(true);
+        const res = await api.deleteMeal(userId, logItem.meal_id);
+        if (res.ok) {
+          setLogs(logs.filter(item => item.id !== id));
+          await loadDashboardData(userId);
+        } else {
+          alert(res.error || "បរាជ័យក្នុងការលុប");
+        }
+      } catch (err) {
+        alert("មានបញ្ហា៖ " + err);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setLogs(logs.filter(item => item.id !== id));
+    }
   };
 
   const handleClearLogs = () => {
+    // Keeping local list reset fallback
     setLogs([]);
     setBurned(0);
   };
 
-  // Text Meal Logger submit
-  const handleTextLogSubmit = (e: React.FormEvent) => {
+  // Add meal using Gemini text analysis
+  const handleTextLogSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!foodText.trim()) return;
 
-    // Simulate Gemini extraction parsing
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    
-    // Simple mock nutrient parser based on keywords to look incredibly realistic
-    let cal = 200;
-    let p = 12;
-    let c = 20;
-    let f = 6;
-    
-    const textLower = foodText.toLowerCase();
-    if (textLower.includes('បាយ') || textLower.includes('rice')) {
-      cal = 420; p = 8; c = 85; f = 2;
-    } else if (textLower.includes('ស៊ុត') || textLower.includes('egg')) {
-      cal = 150; p = 13; c = 1; f = 10;
-    } else if (textLower.includes('មាន់') || textLower.includes('chicken')) {
-      cal = 310; p = 35; c = 2; f = 12;
-    } else if (textLower.includes('សាច់ជ្រូក') || textLower.includes('pork')) {
-      cal = 480; p = 25; c = 3; f = 22;
+    try {
+      setIsLogModalOpen(false);
+      setLoading(true);
+      const res = await api.addMeal(userId, foodText);
+      if (res.ok) {
+        await loadDashboardData(userId);
+      } else {
+        alert(res.error || "AI មិនអាចវិភាគអាហារនេះបានទេ។");
+      }
+    } catch (err) {
+      alert("មានបញ្ហាក្នុងការវិភាគ៖ " + err);
+    } finally {
+      setFoodText('');
+      setLoading(false);
     }
-
-    const newLog: MealLog = {
-      id: Date.now().toString(),
-      name: foodText,
-      calories: cal,
-      protein: p,
-      carbs: c,
-      fat: f,
-      time: timeStr
-    };
-
-    setLogs([newLog, ...logs]);
-    setFoodText('');
-    setIsLogModalOpen(false);
   };
 
-  // Exercise Logger submit
-  const handleExerciseSubmit = (e: React.FormEvent) => {
+  // Record active calorie burns manually
+  const handleExerciseSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const val = parseInt(exerciseCal);
     if (!isNaN(val) && val > 0) {
-      setBurned(burned + val);
-      setExerciseCal('');
-      setIsLogModalOpen(false);
+      try {
+        setIsLogModalOpen(false);
+        setLoading(true);
+        const res = await api.addBurn(userId, val);
+        if (res.ok) {
+          await loadDashboardData(userId);
+        } else {
+          alert(res.error || "មិនអាចកត់ត្រាការដុតកាឡូរីបានឡើយ");
+        }
+      } catch (err) {
+        alert("មានបញ្ហា៖ " + err);
+      } finally {
+        setExerciseCal('');
+        setLoading(false);
+      }
     }
   };
 
-  // Camera Logger trigger (Mock AI upload)
+  // Camera Logger trigger (Mock AI upload, then saves to actual DB on click)
   const handleTriggerCameraUpload = () => {
     setCameraLoading(true);
     setCameraImage("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"); // Mock food image
@@ -222,25 +278,25 @@ const App: React.FC = () => {
     }, 1800);
   };
 
-  const handleSaveCameraResult = () => {
+  const handleSaveCameraResult = async () => {
     if (!cameraResult) return;
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    
-    const newLog: MealLog = {
-      id: Date.now().toString(),
-      name: cameraResult.name,
-      calories: cameraResult.calories,
-      protein: cameraResult.protein,
-      carbs: cameraResult.carbs,
-      fat: cameraResult.fat,
-      time: timeStr
-    };
 
-    setLogs([newLog, ...logs]);
-    setCameraResult(null);
-    setCameraImage(null);
-    setIsLogModalOpen(false);
+    try {
+      setIsLogModalOpen(false);
+      setLoading(true);
+      const res = await api.addMeal(userId, cameraResult.name);
+      if (res.ok) {
+        await loadDashboardData(userId);
+      } else {
+        alert(res.error || "មិនអាចកត់ត្រាអាហារបានទេ");
+      }
+    } catch (err) {
+      alert("មានបញ្ហា៖ " + err);
+    } finally {
+      setCameraResult(null);
+      setCameraImage(null);
+      setLoading(false);
+    }
   };
 
   return (
@@ -255,6 +311,23 @@ const App: React.FC = () => {
           <span className="header-date">{getTodayDateString()}</span>
         </div>
       </div>
+
+      {/* Network Error Toast banner if any */}
+      {errorMsg && (
+        <div style={{ margin: '10px 20px', padding: '12px', background: 'rgba(239, 68, 68, 0.15)', borderRadius: '12px', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#ef4444', fontSize: '12px', display: 'flex', justifyContent: 'center' }}>
+          ⚠️ {errorMsg}
+        </div>
+      )}
+
+      {/* Full-screen glassmorphism loader for API updates */}
+      {loading && (
+        <div className="loader-container" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(10, 10, 15, 0.75)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
+          <div className="spinner" />
+          <p style={{ fontSize: '13px', color: 'var(--color-primary)', fontWeight: 600, letterSpacing: '0.5px' }}>
+            កំពុងភ្ជាប់ប្រព័ន្ធ និងទាញយកទិន្នន័យ...
+          </p>
+        </div>
+      )}
 
       {/* Render current main page content view */}
       <div className="app-content">
@@ -392,7 +465,7 @@ const App: React.FC = () => {
                       <h4 style={{ color: 'var(--color-primary)' }}>📊 លទ្ធផលវិភាគរបស់ AI</h4>
                       <strong style={{ fontSize: '15px', display: 'block', margin: '8px 0' }}>{cameraResult.name}</strong>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '12px' }}>
-                        <div>🔥 កាឡូរី៖ <b>{cameraResult.calories} kcal</b></div>
+                        <div>🔥 កាឡូរី៖ <b>{cameraResult.calories} Cal</b></div>
                         <div>🥩 ប្រូតេអ៊ីន៖ <b>{cameraResult.protein}g</b></div>
                         <div>🌾 កាបូអ៊ីដ្រាត៖ <b>{cameraResult.carbs}g</b></div>
                         <div>🥑 ខ្លាញ់៖ <b>{cameraResult.fat}g</b></div>
@@ -419,7 +492,7 @@ const App: React.FC = () => {
             {logType === 'exercise' && (
               <form onSubmit={handleExerciseSubmit}>
                 <div className="input-group">
-                  <span className="input-label">កាឡូរីដែលបានដុតរំលាយ (kcal)</span>
+                  <span className="input-label">កាឡូរីដែលបានដុតរំលាយ (Cal)</span>
                   <input
                     type="number"
                     required
