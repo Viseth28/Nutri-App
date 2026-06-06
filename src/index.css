@@ -381,12 +381,12 @@ input:checked + .slider-switch:before {
   align-items: center;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition-smooth);
   position: relative;
-  padding: 8px 12px;
+  padding: 6px 2px;
   border-radius: var(--radius-md);
 }
 

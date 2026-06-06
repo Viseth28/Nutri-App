@@ -233,5 +233,34 @@ export const api = {
       daily_goal: data.daily_goal,
       days: days
     };
+  },
+
+  searchFood: async (userId: number, query: string): Promise<{ ok: boolean; food?: Meal; error?: string }> => {
+    const res = await fetch(`${BASE_URL}/api/tma/search_food?user_id=${userId}&query=${encodeURIComponent(query)}`);
+    if (!res.ok) throw new Error("Failed to search food");
+    return await res.json();
+  },
+
+  addCustomMeal: async (
+    userId: number,
+    meal: { food_name: string; calories: number; protein: number; fat: number; carbs: number; sugar: number },
+    customDate?: string
+  ): Promise<{ ok: boolean; meal_id?: number; error?: string }> => {
+    const res = await fetch(`${BASE_URL}/api/tma/custom_meal`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: userId,
+        food_name: meal.food_name,
+        calories: meal.calories,
+        protein: meal.protein,
+        fat: meal.fat,
+        carbs: meal.carbs,
+        sugar: meal.sugar,
+        custom_date: customDate
+      })
+    });
+    if (!res.ok) throw new Error("Failed to add custom meal");
+    return await res.json();
   }
 };

@@ -8,13 +8,15 @@ import {
   Camera, 
   Sparkles, 
   Flame,
-  Calendar
+  Calendar,
+  Search
 } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { Suggest } from './components/Suggest';
 import { WeightTracker } from './components/WeightTracker';
 import { ProfileSetup } from './components/ProfileSetup';
 import { WeeklyReport } from './components/WeeklyReport';
+import { FoodSearch } from './components/FoodSearch';
 import { api } from './services/api';
 import type { WeeklyDashboardData } from './services/api';
 
@@ -69,7 +71,7 @@ const ACTIVE_USER_ID = telegramUserId || 562180371;
 const App: React.FC = () => {
   // Global State
   const [userId] = useState<number>(ACTIVE_USER_ID);
-  const [activeTab, setActiveTab] = useState<'home' | 'weekly' | 'suggest' | 'weight' | 'profile'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'weekly' | 'suggest' | 'search' | 'weight' | 'profile'>('home');
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [logs, setLogs] = useState<MealLog[]>([]);
   const [burned, setBurned] = useState<number>(0);
@@ -360,6 +362,16 @@ const App: React.FC = () => {
           <Suggest targetCal={targetCal} />
         )}
         
+        {activeTab === 'search' && (
+          <FoodSearch 
+            userId={userId} 
+            onLogSuccess={() => {
+              loadDashboardData(userId);
+              setActiveTab('home');
+            }} 
+          />
+        )}
+        
         {activeTab === 'weight' && (
           <WeightTracker 
             currentWeight={profile ? profile.weight : 70}
@@ -396,6 +408,11 @@ const App: React.FC = () => {
         {/* Center Logging CTA Button */}
         <div className="nav-tab-center" onClick={() => setIsLogModalOpen(true)}>
           <Plus size={26} />
+        </div>
+
+        <div className={`nav-tab ${activeTab === 'search' ? 'active' : ''}`} onClick={() => setActiveTab('search')}>
+          <Search className="nav-tab-icon" size={22} />
+          <span>ស្វែងរក</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'weight' ? 'active' : ''}`} onClick={() => setActiveTab('weight')}>
