@@ -7,12 +7,14 @@ import {
   Plus, 
   Camera, 
   Sparkles, 
-  Flame 
+  Flame,
+  Calendar
 } from 'lucide-react';
 import { Dashboard } from './components/Dashboard';
 import { Suggest } from './components/Suggest';
 import { WeightTracker } from './components/WeightTracker';
 import { ProfileSetup } from './components/ProfileSetup';
+import { WeeklyReport } from './components/WeeklyReport';
 import { api } from './services/api';
 import type { WeeklyDashboardData } from './services/api';
 
@@ -67,7 +69,7 @@ const ACTIVE_USER_ID = telegramUserId || 562180371;
 const App: React.FC = () => {
   // Global State
   const [userId] = useState<number>(ACTIVE_USER_ID);
-  const [activeTab, setActiveTab] = useState<'home' | 'suggest' | 'weight' | 'profile'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'weekly' | 'suggest' | 'weight' | 'profile'>('home');
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
   const [logs, setLogs] = useState<MealLog[]>([]);
   const [burned, setBurned] = useState<number>(0);
@@ -347,8 +349,11 @@ const App: React.FC = () => {
             onDeleteLog={handleDeleteLog}
             onClearLogs={handleClearLogs}
             onOpenLogModal={() => setIsLogModalOpen(true)}
-            weeklyData={weeklyData}
           />
+        )}
+        
+        {activeTab === 'weekly' && (
+          <WeeklyReport weeklyData={weeklyData} />
         )}
         
         {activeTab === 'suggest' && (
@@ -376,6 +381,11 @@ const App: React.FC = () => {
         <div className={`nav-tab ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
           <Home className="nav-tab-icon" size={22} />
           <span>Home</span>
+        </div>
+
+        <div className={`nav-tab ${activeTab === 'weekly' ? 'active' : ''}`} onClick={() => setActiveTab('weekly')}>
+          <Calendar className="nav-tab-icon" size={22} />
+          <span>របាយការណ៍</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'suggest' ? 'active' : ''}`} onClick={() => setActiveTab('suggest')}>
