@@ -61,6 +61,24 @@ export interface DashboardData {
   no_sweet_today: boolean;
 }
 
+export interface WeeklyDayData {
+  date: string;
+  day_name_en: string;
+  day_name_kh: string;
+  eaten: number;
+  burned: number;
+  no_sweet: boolean;
+  meals: MealLog[];
+}
+
+export interface WeeklyDashboardData {
+  user_id: number;
+  start_date: string;
+  end_date: string;
+  daily_goal: number;
+  days: WeeklyDayData[];
+}
+
 export const api = {
   getDashboard: async (userId: number): Promise<DashboardData> => {
     const res = await fetch(`${BASE_URL}/api/tma/dashboard?user_id=${userId}`);
@@ -178,5 +196,42 @@ export const api = {
     });
     if (!res.ok) throw new Error("Failed to delete meal");
     return await res.json();
+  },
+
+  getWeeklyData: async (userId: number): Promise<WeeklyDashboardData> => {
+    const res = await fetch(`${BASE_URL}/api/tma/weekly?user_id=${userId}`);
+    if (!res.ok) throw new Error("Failed to fetch weekly progress data");
+    const data = await res.json();
+    
+    const days: WeeklyDayData[] = (data.days || []).map((day: any) => {
+      const meals: MealLog[] = (day.meals || []).map((m: any) => ({
+        id: m.meal_id?.toString() || Math.random().toString(),
+        meal_id: m.meal_id,
+        name: m.food_name,
+        calories: m.calories,
+        protein: m.protein || 0,
+        fat: m.fat || 0,
+        carbs: m.carbs || 0,
+        time: m.time || "12:00"
+      }));
+      
+      return {
+        date: day.date,
+        day_name_en: day.day_name_en,
+        day_name_kh: day.day_name_kh,
+        eaten: day.eaten || 0,
+        burned: day.burned || 0,
+        no_sweet: !!day.no_sweet,
+        meals: meals
+      };
+    });
+
+    return {
+      user_id: data.user_id,
+      start_date: data.start_date,
+      end_date: data.end_date,
+      daily_goal: data.daily_goal,
+      days: days
+    };
   }
 };

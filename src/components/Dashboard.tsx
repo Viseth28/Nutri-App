@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CalorieRing } from './CalorieRing';
 import { Trash2 } from 'lucide-react';
+import type { WeeklyDashboardData } from '../services/api';
 
 interface MealLog {
   id: string;
+  meal_id?: number;
   name: string;
   calories: number;
   protein: number;
@@ -21,6 +23,7 @@ interface DashboardProps {
   onDeleteLog: (id: string) => void;
   onClearLogs: () => void;
   onOpenLogModal: () => void;
+  weeklyData: WeeklyDashboardData | null;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -32,7 +35,17 @@ export const Dashboard: React.FC<DashboardProps> = ({
   onDeleteLog,
   onClearLogs,
   onOpenLogModal,
+  weeklyData,
 }) => {
+  const [expandedDate, setExpandedDate] = useState<string | null>(null);
+
+  const toggleExpandDate = (dateStr: string) => {
+    if (expandedDate === dateStr) {
+      setExpandedDate(null);
+    } else {
+      setExpandedDate(dateStr);
+    }
+  };
   // Calculations
   const totalEaten = logs.reduce((sum, item) => sum + item.calories, 0);
   const totalProtein = logs.reduce((sum, item) => sum + item.protein, 0);
@@ -100,6 +113,142 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </div>
         </div>
       </div>
+
+      {/* 1b. Weekly Progress Card */}
+      {weeklyData && (
+        <div className="card" style={{ padding: '16px 20px' }}>
+          <h4 style={{ color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+            <span>📊 របាយការណ៍សប្តាហ៍នេះ</span>
+            <span style={{ fontSize: '11px', fontWeight: 'normal', color: 'var(--text-muted)' }}>
+              ({weeklyData.start_date} ដល់ {weeklyData.end_date})
+            </span>
+          </h4>
+
+          {/* 7 Days Progress Bar Row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '90px', padding: '10px 0 20px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.05)', marginBottom: '16px' }}>
+            {weeklyData.days.map((day) => {
+              const capGoal = weeklyData.daily_goal || 2000;
+              const ratio = Math.min(1.2, day.eaten / capGoal);
+              const heightPct = Math.round(ratio * 100);
+              
+              // Highlight if budget exceeded
+              const isOver = day.eaten > capGoal;
+              const barColor = isOver ? 'var(--color-error)' : 'var(--color-primary)';
+              
+              const isToday = new Date().toISOString().split('T')[0] === day.date;
+              
+              return (
+                <div key={day.date} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1, gap: '6px', cursor: 'pointer' }} onClick={() => toggleExpandDate(day.date)}>
+                  <div style={{ position: 'relative', width: '10px', height: '50px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '5px', overflow: 'hidden', display: 'flex', alignItems: 'flex-end' }}>
+                    <div style={{ width: '100%', height: `${heightPct || 4}%`, background: barColor, borderRadius: '5px', transition: 'height 0.4s ease-out', boxShadow: !isOver ? '0 0 8px var(--color-primary-glow)' : 'none' }} />
+                  </div>
+                  <span style={{ fontSize: '10px', fontWeight: isToday ? 'bold' : 'normal', color: isToday ? 'var(--color-primary)' : 'var(--text-muted)' }}>
+                    {day.day_name_kh}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Days Accordion List */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {weeklyData.days.map((day) => {
+              const isExpanded = expandedDate === day.date;
+              const isToday = new Date().toISOString().split('T')[0] === day.date;
+              
+              return (
+                <div 
+                  key={day.date} 
+                  style={{ 
+                    borderRadius: 'var(--radius-md)', 
+                    background: isToday ? 'rgba(244, 63, 94, 0.04)' : 'rgba(255, 255, 255, 0.01)',
+                    border: isToday ? '1px solid rgba(244, 63, 94, 0.15)' : '1px solid rgba(255, 255, 255, 0.03)',
+                    overflow: 'hidden',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  {/* Day Header Trigger */}
+                  <div 
+                    onClick={() => toggleExpandDate(day.date)}
+                    style={{ 
+                      padding: '12px 14px', 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center', 
+                      cursor: 'pointer',
+                      userSelect: 'none'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: isToday ? 'var(--color-primary)' : 'var(--text-primary)' }}>
+                        {day.day_name_kh}
+                      </span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                        {day.date.substring(5)}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ textAlign: 'right', fontSize: '12px' }}>
+                        <div>
+                          <span style={{ fontWeight: 700 }}>{day.eaten}</span>
+                          <span style={{ color: 'var(--text-muted)', fontSize: '10px' }}> / {weeklyData.daily_goal} Cal</span>
+                        </div>
+                        {day.burned > 0 && (
+                          <div style={{ fontSize: '10px', color: 'var(--color-secondary)', fontWeight: 600 }}>
+                            🔥 ដុត {day.burned} Cal
+                          </div>
+                        )}
+                      </div>
+
+                      {/* No Sweet Drink Badge */}
+                      <span style={{ fontSize: '14px' }}>
+                        {day.no_sweet ? "🥤✅" : "🥤❌"}
+                      </span>
+                      
+                      {/* Accordion Arrow Indicator */}
+                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}>
+                        ▶
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Expanded Meal Records for that Day */}
+                  {isExpanded && (
+                    <div style={{ padding: '0 14px 14px 14px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', background: 'rgba(0, 0, 0, 0.15)', animation: 'fadeIn 0.2s ease-out' }}>
+                      <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)', margin: '10px 0 6px 0' }}>
+                        📖 កំណត់ត្រាអាហារ ({day.meals.length})
+                      </div>
+                      
+                      {day.meals.length === 0 ? (
+                        <div style={{ fontSize: '11px', color: 'var(--text-muted)', padding: '6px 0' }}>
+                          គ្មានកំណត់ត្រាអាហារសម្រាប់ថ្ងៃនេះទេ។
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {day.meals.map((meal) => (
+                            <div key={meal.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 8px', background: 'rgba(255, 255, 255, 0.02)', borderRadius: '6px', border: '1px solid rgba(255, 255, 255, 0.02)' }}>
+                              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span style={{ fontSize: '12px', fontWeight: 600 }}>{meal.name}</span>
+                                <span style={{ fontSize: '9px', color: 'var(--text-muted)' }}>
+                                  ⏰ {meal.time} | P: {meal.protein}g • C: {meal.carbs}g • F: {meal.fat}g
+                                </span>
+                              </div>
+                              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-primary)' }}>
+                                +{meal.calories} Cal
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* 2. Challenge Toggle Card */}
       <div className="card">

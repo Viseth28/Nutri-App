@@ -14,6 +14,7 @@ import { Suggest } from './components/Suggest';
 import { WeightTracker } from './components/WeightTracker';
 import { ProfileSetup } from './components/ProfileSetup';
 import { api } from './services/api';
+import type { WeeklyDashboardData } from './services/api';
 
 interface MealLog {
   id: string;
@@ -74,6 +75,7 @@ const App: React.FC = () => {
   const [noSweetToday, setNoSweetToday] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [weeklyData, setWeeklyData] = useState<WeeklyDashboardData | null>(null);
   
   // Weight & Profile States
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -93,16 +95,20 @@ const App: React.FC = () => {
   const loadDashboardData = async (uid: number) => {
     try {
       setLoading(true);
-      const data = await api.getDashboard(uid);
+      const [dashRes, weeklyRes] = await Promise.all([
+        api.getDashboard(uid),
+        api.getWeeklyData(uid)
+      ]);
       
-      setLogs(data.today_meals);
-      setBurned(data.total_burn);
-      setTargetCal(data.goal);
-      setNoSweetToday(data.no_sweet_today);
-      setProfile(data.profile);
-      if (data.profile) {
-        setPreviousWeight(data.profile.weight);
+      setLogs(dashRes.today_meals);
+      setBurned(dashRes.total_burn);
+      setTargetCal(dashRes.goal);
+      setNoSweetToday(dashRes.no_sweet_today);
+      setProfile(dashRes.profile);
+      if (dashRes.profile) {
+        setPreviousWeight(dashRes.profile.weight);
       }
+      setWeeklyData(weeklyRes);
       setErrorMsg(null);
     } catch (err: any) {
       console.error("Error retrieving user database logs:", err);
@@ -341,6 +347,7 @@ const App: React.FC = () => {
             onDeleteLog={handleDeleteLog}
             onClearLogs={handleClearLogs}
             onOpenLogModal={() => setIsLogModalOpen(true)}
+            weeklyData={weeklyData}
           />
         )}
         
