@@ -1,6 +1,6 @@
 // NutriApp/src/services/api.ts
 
-const DEFAULT_API_BASE = "https://nutri-bot-gamma.vercel.app";
+const DEFAULT_API_BASE = "https://telenutribot.vercel.app";
 
 const getBaseUrl = (): string => {
   if (import.meta.env && import.meta.env.VITE_API_BASE_URL) {
