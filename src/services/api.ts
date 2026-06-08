@@ -198,8 +198,12 @@ export const api = {
     return await res.json();
   },
 
-  getWeeklyData: async (userId: number): Promise<WeeklyDashboardData> => {
-    const res = await fetch(`${BASE_URL}/api/tma/weekly?user_id=${userId}`);
+  getWeeklyData: async (userId: number, startDate?: string, endDate?: string): Promise<WeeklyDashboardData> => {
+    let url = `${BASE_URL}/api/tma/weekly?user_id=${userId}`;
+    if (startDate && endDate) {
+      url += `&start_date=${startDate}&end_date=${endDate}`;
+    }
+    const res = await fetch(url);
     if (!res.ok) throw new Error("Failed to fetch weekly progress data");
     const data = await res.json();
     

@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Kantumruy+Pro:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-heading: 'Outfit', 'Kantumruy Pro', sans-serif;
+  --font-body: 'Inter', 'Kantumruy Pro', sans-serif;
 
   /* Sunset Crimson Color Palette (HSL) */
   --bg-primary: #0a060a;                      /* Rich deep plum black */
@@ -368,10 +368,11 @@ input:checked + .slider-switch:before {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
   align-items: center;
-  padding: 0 10px 15px 10px;
+  justify-items: center;
+  padding: 0 4px 15px 4px;
   z-index: 100;
 }
 
@@ -388,6 +389,8 @@ input:checked + .slider-switch:before {
   position: relative;
   padding: 6px 2px;
   border-radius: var(--radius-md);
+  width: 100%;
+  text-align: center;
 }
 
 .nav-tab-icon {

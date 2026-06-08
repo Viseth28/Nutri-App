@@ -393,7 +393,31 @@ const App: React.FC = () => {
         )}
         
         {activeTab === 'weekly' && (
-          <WeeklyReport weeklyData={weeklyData} />
+          <WeeklyReport 
+            weeklyData={weeklyData} 
+            onFilterChange={async (start, end) => {
+              try {
+                setLoading(true);
+                const res = await api.getWeeklyData(userId, start, end);
+                setWeeklyData(res);
+              } catch (e) {
+                alert("មិនអាចទាញយកទិន្នន័យបានឡើយ៖ " + e);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            onFilterReset={async () => {
+              try {
+                setLoading(true);
+                const res = await api.getWeeklyData(userId);
+                setWeeklyData(res);
+              } catch (e) {
+                alert("មិនអាចទាញយកទិន្នន័យបានឡើយ៖ " + e);
+              } finally {
+                setLoading(false);
+              }
+            }}
+          />
         )}
         
         {activeTab === 'suggest' && (
@@ -430,7 +454,7 @@ const App: React.FC = () => {
       <div className="bottom-nav">
         <div className={`nav-tab ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
           <Home className="nav-tab-icon" size={22} />
-          <span>Home</span>
+          <span>ទំព័រដើម</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'weekly' ? 'active' : ''}`} onClick={() => setActiveTab('weekly')}>
