@@ -271,21 +271,52 @@ const App: React.FC = () => {
     }
   };
 
-  // Camera Logger trigger (Mock AI upload, then saves to actual DB on click)
+  // Camera Logger trigger - clicks hidden file input
   const handleTriggerCameraUpload = () => {
-    setCameraLoading(true);
-    setCameraImage("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"); // Mock food image
-    
-    setTimeout(() => {
-      setCameraLoading(false);
-      setCameraResult({
-        name: '🥗 សាឡាត់ផ្លែបឺរ និងទ្រូងមាន់ស្ងោរ',
-        calories: 380,
-        protein: 32,
-        carbs: 12,
-        fat: 14
-      });
-    }, 1800);
+    const fileInput = document.getElementById('camera-file-input');
+    if (fileInput) {
+      (fileInput as HTMLInputElement).value = ''; // Reset to allow same file upload
+      fileInput.click();
+    }
+  };
+
+  // Process selected photo file
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Show preview and analyze
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64 = reader.result as string;
+      setCameraImage(base64);
+      setCameraLoading(true);
+      setCameraResult(null);
+
+      try {
+        const res = await api.addMealPhoto(userId, base64);
+        if (res.ok && res.meal) {
+          setCameraResult({
+            name: res.meal.food_name,
+            calories: res.meal.calories,
+            protein: res.meal.protein,
+            carbs: res.meal.carbs,
+            fat: res.meal.fat,
+            sugar: res.meal.sugar,
+            coaching_recommendation: res.meal.coaching_recommendation
+          });
+        } else {
+          alert(res.error || "មិនអាចវិភាគរូបភាពបានឡើយ");
+          setCameraImage(null);
+        }
+      } catch (err) {
+        alert("មានបញ្ហា៖ " + err);
+        setCameraImage(null);
+      } finally {
+        setCameraLoading(false);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSaveCameraResult = async () => {
@@ -294,7 +325,14 @@ const App: React.FC = () => {
     try {
       setIsLogModalOpen(false);
       setLoading(true);
-      const res = await api.addMeal(userId, cameraResult.name);
+      const res = await api.addCustomMeal(userId, {
+        food_name: cameraResult.name,
+        calories: cameraResult.calories,
+        protein: cameraResult.protein,
+        fat: cameraResult.fat,
+        carbs: cameraResult.carbs,
+        sugar: cameraResult.sugar || 0
+      });
       if (res.ok) {
         await loadDashboardData(userId);
       } else {
@@ -471,6 +509,14 @@ const App: React.FC = () => {
 
             {logType === 'camera' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <input
+                  type="file"
+                  id="camera-file-input"
+                  accept="image/*"
+                  capture="environment"
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
                 {!cameraImage && !cameraLoading && (
                   <div className="image-preview-box" onClick={handleTriggerCameraUpload}>
                     <Camera size={40} style={{ color: 'var(--text-muted)' }} />

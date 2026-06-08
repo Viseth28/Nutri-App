@@ -262,5 +262,23 @@ export const api = {
     });
     if (!res.ok) throw new Error("Failed to add custom meal");
     return await res.json();
+  },
+
+  addMealPhoto: async (
+    userId: number,
+    imageBase64: string,
+    customDate?: string
+  ): Promise<{ ok: boolean; meal?: Meal; error?: string }> => {
+    const res = await fetch(`${BASE_URL}/api/tma/meal_photo`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: userId,
+        image_base64: imageBase64,
+        custom_date: customDate
+      })
+    });
+    if (!res.ok) throw new Error("Failed to analyze meal photo");
+    return await res.json();
   }
 };
