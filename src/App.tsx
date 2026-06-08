@@ -86,9 +86,17 @@ const App: React.FC = () => {
   const [previousWeight, setPreviousWeight] = useState<number | null>(null);
   
   // Input Modal Forms State
-  const [logType, setLogType] = useState<'food' | 'camera' | 'exercise'>('food');
+  const [logType, setLogType] = useState<'food' | 'camera' | 'manual_food' | 'exercise'>('food');
   const [foodText, setFoodText] = useState('');
   const [exerciseCal, setExerciseCal] = useState('');
+
+  // Manual Food Inputs
+  const [manualFoodName, setManualFoodName] = useState('');
+  const [manualCalories, setManualCalories] = useState('');
+  const [manualProtein, setManualProtein] = useState('');
+  const [manualFat, setManualFat] = useState('');
+  const [manualCarbs, setManualCarbs] = useState('');
+  const [manualSugar, setManualSugar] = useState('');
   
   // Simulated Camera loading
   const [cameraImage, setCameraImage] = useState<string | null>(null);
@@ -268,6 +276,41 @@ const App: React.FC = () => {
         setExerciseCal('');
         setLoading(false);
       }
+    }
+  };
+
+  // Record custom meal logs manually (without AI)
+  const handleManualFoodSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!manualFoodName || !manualCalories) return;
+
+    try {
+      setIsLogModalOpen(false);
+      setLoading(true);
+      const res = await api.addCustomMeal(userId, {
+        food_name: manualFoodName,
+        calories: parseInt(manualCalories) || 0,
+        protein: parseInt(manualProtein) || 0,
+        fat: parseInt(manualFat) || 0,
+        carbs: parseInt(manualCarbs) || 0,
+        sugar: parseInt(manualSugar) || 0
+      });
+
+      if (res.ok) {
+        setManualFoodName('');
+        setManualCalories('');
+        setManualProtein('');
+        setManualFat('');
+        setManualCarbs('');
+        setManualSugar('');
+        await loadDashboardData(userId);
+      } else {
+        alert(res.error || "មិនអាចកត់ត្រាអាហារបានទេ");
+      }
+    } catch (err) {
+      alert("មានបញ្ហា៖ " + err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -500,10 +543,13 @@ const App: React.FC = () => {
             {/* Log form type switcher tabs */}
             <div className="segmented-control" style={{ marginBottom: '20px' }}>
               <button className={`segment-btn ${logType === 'food' ? 'active' : ''}`} onClick={() => setLogType('food')}>
-                📝 ម្ហូបអាហារ
+                📝 AI អត្ថបទ
               </button>
               <button className={`segment-btn ${logType === 'camera' ? 'active' : ''}`} onClick={() => setLogType('camera')}>
-                📷 ស្កែនរូបភាព
+                📷 AI រូបភាព
+              </button>
+              <button className={`segment-btn ${logType === 'manual_food' ? 'active' : ''}`} onClick={() => setLogType('manual_food')}>
+                ✍️ កត់ផ្ទាល់
               </button>
               <button className={`segment-btn ${logType === 'exercise' ? 'active' : ''}`} onClick={() => setLogType('exercise')}>
                 🔥 ហាត់ប្រាណ
@@ -591,6 +637,80 @@ const App: React.FC = () => {
                   </div>
                 )}
               </div>
+            )}
+
+            {logType === 'manual_food' && (
+              <form onSubmit={handleManualFoodSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="input-group">
+                  <span className="input-label">ឈ្មោះអាហារ</span>
+                  <input
+                    type="text"
+                    required
+                    value={manualFoodName}
+                    onChange={(e) => setManualFoodName(e.target.value)}
+                    placeholder="ឧទាហរណ៍: បាយឆាសាច់ជ្រូក"
+                    className="form-input"
+                  />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  <div className="input-group">
+                    <span className="input-label">ថាមពល (Cal)</span>
+                    <input
+                      type="number"
+                      required
+                      value={manualCalories}
+                      onChange={(e) => setManualCalories(e.target.value)}
+                      placeholder="Cal"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="input-group">
+                    <span className="input-label">ប្រូតេអ៊ីន (g)</span>
+                    <input
+                      type="number"
+                      value={manualProtein}
+                      onChange={(e) => setManualProtein(e.target.value)}
+                      placeholder="g"
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  <div className="input-group">
+                    <span className="input-label">កាបូអ៊ីដ្រាត (g)</span>
+                    <input
+                      type="number"
+                      value={manualCarbs}
+                      onChange={(e) => setManualCarbs(e.target.value)}
+                      placeholder="g"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="input-group">
+                    <span className="input-label">ខ្លាញ់សរុប (g)</span>
+                    <input
+                      type="number"
+                      value={manualFat}
+                      onChange={(e) => setManualFat(e.target.value)}
+                      placeholder="g"
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="input-group">
+                    <span className="input-label">ស្ករ (g)</span>
+                    <input
+                      type="number"
+                      value={manualSugar}
+                      onChange={(e) => setManualSugar(e.target.value)}
+                      placeholder="g"
+                      className="form-input"
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="button-primary" style={{ marginTop: '8px' }}>
+                  <span>រក្សាទុកកំណត់ត្រា</span>
+                </button>
+              </form>
             )}
 
             {logType === 'exercise' && (
