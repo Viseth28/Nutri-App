@@ -64,7 +64,7 @@ export interface DashboardData {
 export interface WeeklyDayData {
   date: string;
   day_name_en: string;
-  day_name_kh: string;
+  day_name: string;
   eaten: number;
   burned: number;
   no_sweet: boolean;
@@ -222,7 +222,7 @@ export const api = {
       return {
         date: day.date,
         day_name_en: day.day_name_en,
-        day_name_kh: day.day_name_kh,
+        day_name: day.day_name,
         eaten: day.eaten || 0,
         burned: day.burned || 0,
         no_sweet: !!day.no_sweet,

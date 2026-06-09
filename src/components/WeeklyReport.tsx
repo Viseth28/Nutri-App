@@ -161,7 +161,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
                     <div style={{ width: '100%', height: `${heightPct || 4}%`, background: barColor, borderRadius: '6px', transition: 'height 0.4s ease-out', boxShadow: !isOver ? '0 0 8px var(--color-primary-glow)' : 'none' }} />
                   </div>
                   <span style={{ fontSize: '9px', fontWeight: isToday ? 'bold' : 'normal', color: isToday ? 'var(--color-primary)' : 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                    {day.day_name_kh}
+                    {day.day_name}
                   </span>
                 </div>
               );
@@ -208,7 +208,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '14px', fontWeight: 700, color: isToday ? 'var(--color-primary)' : 'var(--text-primary)' }}>
-                    {day.day_name_kh}
+                    {day.day_name}
                   </span>
                   <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
                     {day.date.substring(5)}

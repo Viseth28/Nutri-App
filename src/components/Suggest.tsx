@@ -22,7 +22,7 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
 
   const generateSuggestions = () => {
     setLoading(true);
-    // Simulate Gemini API response with clean Khmer-market food datasets matching their exact preference & target cal
+    // Simulate Gemini API response with clean food datasets matching their exact preference & target cal
     setTimeout(() => {
       let bCal = Math.round(targetCal * 0.25);
       let lCal = Math.round(targetCal * 0.40);
