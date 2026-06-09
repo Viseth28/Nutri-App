@@ -70,7 +70,7 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
   return (
     <div className="profile-setup-view">
       <div className="header-container" style={{ marginBottom: '16px' }}>
-        <h3>👤 គណនាបរិមាណកាឡូរីប្រចាំថ្ងៃ</h3>
+        <h3>👤 Calculate Daily Calorie Target</h3>
         <Calculator size={20} style={{ color: 'var(--color-primary)' }} />
       </div>
 
@@ -78,18 +78,18 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
       {step === 1 && (
         <div className="card" style={{ animation: 'slideUp 0.3s ease-out' }}>
           <span className="input-label" style={{ fontSize: '14px', fontWeight: 600, color: 'white', marginBottom: '16px' }}>
-            ជំហានទី ១៖ ជ្រើសរើសភេទរបស់អ្នក
+            Step 1: Select Your Gender
           </span>
           <div className="segmented-control" style={{ marginBottom: '20px' }}>
             <button className={`segment-btn ${gender === 'male' ? 'active' : ''}`} onClick={() => setGender('male')}>
-              🙋‍♂️ ប្រុស (Male)
+              👨 Male
             </button>
             <button className={`segment-btn ${gender === 'female' ? 'active' : ''}`} onClick={() => setGender('female')}>
-              🙋‍♀️ ស្រី (Female)
+              👩 Female
             </button>
           </div>
           <button className="button-primary" onClick={() => setStep(2)}>
-            <span>បន្តទៅមុខទៀត</span>
+            <span>Next Step</span>
           </button>
         </div>
       )}
@@ -98,10 +98,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
       {step === 2 && (
         <div className="card" style={{ animation: 'slideUp 0.3s ease-out' }}>
           <span className="input-label" style={{ fontSize: '14px', fontWeight: 600, color: 'white', marginBottom: '16px' }}>
-            ជំហានទី ២៖ បញ្ជាក់អាយុរបស់អ្នក
+            Step 2: Enter Your Age
           </span>
           <div className="input-group">
-            <span className="input-label">អាយុ (Age - ឆ្នាំ)</span>
+            <span className="input-label">Age (Years)</span>
             <input
               type="number"
               min="1"
@@ -113,10 +113,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button className="button-primary" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }} onClick={() => setStep(1)}>
-              ត្រឡប់ក្រោយ
+              Back
             </button>
             <button className="button-primary" onClick={() => setStep(3)}>
-              បន្តទៅមុខទៀត
+              Next
             </button>
           </div>
         </div>
@@ -126,10 +126,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
       {step === 3 && (
         <div className="card" style={{ animation: 'slideUp 0.3s ease-out' }}>
           <span className="input-label" style={{ fontSize: '14px', fontWeight: 600, color: 'white', marginBottom: '16px' }}>
-            ជំហានទី ៣៖ កម្ពស់របស់អ្នក
+            Step 3: Enter Your Height
           </span>
           <div className="input-group">
-            <span className="input-label">កម្ពស់ (Height - cm)</span>
+            <span className="input-label">Height (cm)</span>
             <input
               type="number"
               min="50"
@@ -141,10 +141,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button className="button-primary" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }} onClick={() => setStep(2)}>
-              ត្រឡប់ក្រោយ
+              Back
             </button>
             <button className="button-primary" onClick={() => setStep(4)}>
-              បន្តទៅមុខទៀត
+              Next
             </button>
           </div>
         </div>
@@ -154,10 +154,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
       {step === 4 && (
         <div className="card" style={{ animation: 'slideUp 0.3s ease-out' }}>
           <span className="input-label" style={{ fontSize: '14px', fontWeight: 600, color: 'white', marginBottom: '16px' }}>
-            ជំហានទី ៤៖ ទម្ងន់បច្ចុប្បន្នរបស់អ្នក
+            Step 4: Enter Your Weight
           </span>
           <div className="input-group">
-            <span className="input-label">ទម្ងន់ (Weight - kg)</span>
+            <span className="input-label">Weight (kg)</span>
             <input
               type="number"
               step="0.1"
@@ -170,10 +170,10 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button className="button-primary" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }} onClick={() => setStep(3)}>
-              ត្រឡប់ក្រោយ
+              Back
             </button>
             <button className="button-primary" onClick={() => setStep(5)}>
-              បន្តទៅមុខទៀត
+              Next
             </button>
           </div>
         </div>
@@ -183,33 +183,33 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
       {step === 5 && (
         <div className="card" style={{ animation: 'slideUp 0.3s ease-out' }}>
           <span className="input-label" style={{ fontSize: '14px', fontWeight: 600, color: 'white', marginBottom: '16px' }}>
-            ជំហានទី ៥៖ កម្រិតសកម្មភាពហាត់ប្រាណ
+            Step 5: Physical Activity Level
           </span>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
             <button className={`form-input`} style={{ textAlign: 'left', borderColor: activity === 'sedentary' ? 'var(--color-primary)' : '' }} onClick={() => setActivity('sedentary')}>
-              🚶‍♂️ ស្ងប់ស្ងៀម (Sedentary) - មិនសូវធ្វើចលនា
+              🛋️ Sedentary (Little to no exercise)
             </button>
             <button className={`form-input`} style={{ textAlign: 'left', borderColor: activity === 'light' ? 'var(--color-primary)' : '' }} onClick={() => setActivity('light')}>
-              🏃‍♂️ ស្រាល (Light) - ហាត់ប្រាណ ១-៣ ថ្ងៃ/សប្តាហ៍
+              🚶 Light (Exercise 1-3 days/week)
             </button>
             <button className={`form-input`} style={{ textAlign: 'left', borderColor: activity === 'moderate' ? 'var(--color-primary)' : '' }} onClick={() => setActivity('moderate')}>
-              🚴‍♂️ មធ្យម (Moderate) - ហាត់ប្រាណ ៤-៥ ថ្ងៃ/សប្តាហ៍ (1.465)
+              🏃 Moderate (Exercise 4-5 days/week)
             </button>
             <button className={`form-input`} style={{ textAlign: 'left', borderColor: activity === 'active' ? 'var(--color-primary)' : '' }} onClick={() => setActivity('active')}>
-              🏋️‍♂️ សកម្ម (Active) - ហាត់ប្រាណ ៦-៧ ថ្ងៃ/សប្តាហ៍
+              🏋️ Active (Exercise daily/heavy)
             </button>
             <button className={`form-input`} style={{ textAlign: 'left', borderColor: activity === 'very_active' ? 'var(--color-primary)' : '' }} onClick={() => setActivity('very_active')}>
-              ⚡ សកម្មខ្លាំង (Very Active) - ហាត់ប្រាណធ្ងន់រាល់ថ្ងៃ
+              ⚡ Very Active (Very heavy daily exercise)
             </button>
           </div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <button className="button-primary" style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }} onClick={() => setStep(4)}>
-              ត្រឡប់ក្រោយ
+              Back
             </button>
             <button className="button-primary" onClick={() => setStep(6)}>
-              រក្សាទុក និងគណនា
+              Save & Calculate
             </button>
           </div>
         </div>
@@ -220,26 +220,26 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
         <div style={{ animation: 'slideUp 0.3s ease-out' }}>
           {/* Summary Details */}
           <div className="card">
-            <h4>📊 លទ្ធផលការគណនាកាឡូរី (TDEE)</h4>
+            <h4>📊 BMR & TDEE Calculation Results</h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '12px', fontSize: '12px', color: 'var(--text-muted)' }}>
-              <div>• ភេទ៖ <b>{gender === 'male' ? 'ប្រុស' : 'ស្រី'}</b></div>
-              <div>• អាយុ៖ <b>{age} ឆ្នាំ</b></div>
-              <div>• កម្ពស់៖ <b>{height} cm</b></div>
-              <div>• ទម្ងន់៖ <b>{weight} kg</b></div>
-              <div style={{ gridColumn: 'span 2' }}>• សកម្មភាព៖ <b>{activity.toUpperCase()}</b></div>
+              <div>• Gender: <b>{gender === 'male' ? 'Male' : 'Female'}</b></div>
+              <div>• Age: <b>{age} years old</b></div>
+              <div>• Height: <b>{height} cm</b></div>
+              <div>• Weight: <b>{weight} kg</b></div>
+              <div style={{ gridColumn: 'span 2' }}>• Activity: <b>{activity.toUpperCase()}</b></div>
             </div>
             <button 
               onClick={() => setStep(1)} 
               className="button-primary" 
               style={{ background: 'rgba(255,255,255,0.05)', color: 'white', marginTop: '16px', padding: '10px' }}
             >
-              🔄 គណនាឡើងវិញ
+              🔄 Recalculate
             </button>
           </div>
 
           {/* Goal selection layout cards */}
           <div className="header-container" style={{ margin: '20px 0 10px 0' }}>
-            <h3>🎯 ជ្រើសរើសគោលដៅថ្ងៃនេះ</h3>
+            <h3>🎯 Select Daily Calorie Goal</h3>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -252,12 +252,12 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <strong style={{ fontSize: '15px' }}>🥦 រក្សាទម្ងន់ (Maintain Weight)</strong>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>ថែរក្សារូបរាង និងទម្ងន់ឲ្យនៅដដែល</p>
+                  <strong style={{ fontSize: '15px' }}>🥦 Maintain Weight</strong>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Keep your weight and shape the same</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-primary)' }}>{results.maintain}</span>
-                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/ថ្ងៃ</span>
+                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/day</span>
                 </div>
               </div>
             </div>
@@ -270,12 +270,12 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <strong style={{ fontSize: '15px' }}>🥗 សម្រកតិចតួច (Mild Weight Loss)</strong>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>សម្រកទម្ងន់ ~០.២៥ គីឡូក្រាម/សប្តាហ៍</p>
+                  <strong style={{ fontSize: '15px' }}>🥗 Mild Weight Loss</strong>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Lose ~0.25 kg/week</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-secondary)' }}>{results.mild}</span>
-                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/ថ្ងៃ</span>
+                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/day</span>
                 </div>
               </div>
             </div>
@@ -288,12 +288,12 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <strong style={{ fontSize: '15px' }}>🔥 សម្រកធម្មតា (Weight Loss)</strong>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>សម្រកទម្ងន់ ~០.៥ គីឡូក្រាម/សប្តាហ៍</p>
+                  <strong style={{ fontSize: '15px' }}>🔥 Weight Loss</strong>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Lose ~0.5 kg/week</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-accent)' }}>{results.weight_loss}</span>
-                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/ថ្ងៃ</span>
+                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/day</span>
                 </div>
               </div>
             </div>
@@ -306,12 +306,12 @@ export const ProfileSetup: React.FC<ProfileSetupProps> = ({ profile, onSaveProfi
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <strong style={{ fontSize: '15px' }}>⚡ សម្រកល្បឿនលឿន (Extreme Loss)</strong>
-                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>សម្រកទម្ងន់ ~១.០ គីឡូក្រាម/សប្តាហ៍</p>
+                  <strong style={{ fontSize: '15px' }}>⚡ Extreme Loss</strong>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>Lose ~1.0 kg/week</p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-error)' }}>{results.extreme}</span>
-                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/ថ្ងៃ</span>
+                  <span style={{ fontSize: '10px', display: 'block', color: 'var(--text-muted)' }}>kcal/day</span>
                 </div>
               </div>
             </div>

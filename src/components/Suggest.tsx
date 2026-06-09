@@ -31,55 +31,55 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
       if (pref === 'veg') {
         setMenu({
           breakfast: {
-            name: '🥚 ស៊ុតចៀនបន្លែចម្រុះស្រាលៗ',
+            name: '🥚 Light Fried Eggs with Mixed Veggies',
             calories: bCal,
-            ingredients: ['ស៊ុតមាន់ ២ គ្រាប់', 'ត្រកួនហាន់ល្អិតៗ និងខ្ទឹមក្រហម', 'ប្រេងឆា ១ ស្លាបព្រាកាហ្វេ (កាត់បន្ថយខ្លាញ់)', 'ត្រសក់ និងការ៉ុតស្រស់ហាន់ជាចំណិតសម្រាប់ញ៉ាំហ្គេម']
+            ingredients: ['2 chicken eggs', 'Finely chopped morning glory and shallots', '1 tsp oil (low fat)', 'Fresh cucumber and carrot slices']
           },
           lunch: {
-            name: '🥩 ទ្រូងមាន់ចំហុយ ជ្រលក់ទឹកត្រីកោះកុង និងបន្លែស្ងោរ',
+            name: '🥩 Steamed Chicken Breast with Spicy Lime Dip & Steamed Veggies',
             calories: lCal,
-            ingredients: ['ទ្រូងមាន់ ២០០ ក្រាម (ចំហុយ ឬស្ងោរ)', 'បន្លែស្ងោរចម្រុះ (ត្រកួន ស្ពៃក្តោប ខាត់ណា) ៤០០ ក្រាម', 'ទឹកត្រីកោះកុង (កាត់បន្ថយស្ករ) សម្រាប់បន្ថែមរសជាតិ']
+            ingredients: ['200g chicken breast (steamed or boiled)', '400g mixed steamed greens (cabbage, morning glory)', 'Low-sugar spicy lime dip for flavor']
           },
           dinner: {
-            name: '🐟 ត្រីរ៉ស់អាំងខ្ញី ជាមួយសម្លម្ជូរត្រកួនឥតបាយ',
+            name: '🐟 Grilled Fish with Ginger & Morning Glory Sour Soup (No Rice)',
             calories: dCal,
-            ingredients: ['សាច់ត្រីរ៉ស់អាំង ឬចំហុយ ១៥០ ក្រាម', 'សម្លម្ជូរត្រកួនក្តៅៗ (មិនបាច់ដាក់បាយ ឬម្សៅស៊ុបច្រើន)', 'ខ្ញីស្រស់ហាន់ និងស្លឹកក្រូចសើច']
+            ingredients: ['150g grilled/steamed fish fillet', 'Warm morning glory sour soup', 'Fresh sliced ginger and lime leaves']
           }
         });
       } else if (pref === 'meat') {
         setMenu({
           breakfast: {
-            name: '🍳 ស៊ុតស្ងោរ ២ គ្រាប់ និងទ្រូងមាន់អាំងអំបិលម្ទេស',
+            name: '🍳 2 Boiled Eggs & Chili Garlic Grilled Chicken Breast',
             calories: bCal,
-            ingredients: ['ស៊ុតមាន់ស្ងោរ ២ គ្រាប់', 'ទ្រូងមាន់អាំង ១៥០ ក្រាម ជាមួយអំបិល ម្ទេស ខ្ទឹមស', 'ត្រសក់ស្រស់ ១ ផ្លែធំ']
+            ingredients: ['2 boiled chicken eggs', '150g grilled chicken breast with chili, salt, garlic', '1 large fresh cucumber']
           },
           lunch: {
-            name: '🥩 សាច់ជ្រូកចិញ្ច្រាំឆាគ្រឿងបុក និងស៊ុតចៀនទឹកប្រេងតិច',
+            name: '🥩 Lemongrass Minced Pork Stir-fry & Low-Oil Fried Egg',
             calories: lCal,
-            ingredients: ['សាច់ជ្រូកស្គីនឡេស (សាច់សុទ្ធ) ២៥០ ក្រាម', 'គ្រឿងបុកខ្មែរ (ស្លឹកក្រូច ស្លឹកគ្រៃ រំដេង ខ្ទឹមស)', 'ស៊ុតមាន់ចៀន ១ គ្រាប់']
+            ingredients: ['250g lean minced pork', 'Lemongrass paste (garlic, lemongrass, lime leaf)', '1 fried egg']
           },
           dinner: {
-            name: '🐟 ត្រីឆ្ពិនអាំងទឹកត្រីអំពិលទុំ និងទ្រូងមាន់ស្ងោរ',
+            name: '🐟 Grilled Fish with Tamarind Sauce & Steamed Chicken Breast',
             calories: dCal,
-            ingredients: ['ត្រីឆ្ពិនអាំងកម្រិតមធ្យម ២០០ ក្រាម', 'ទ្រូងមាន់ស្ងោរហាន់ជាបន្ទះៗ ១០០ ក្រាម', 'បន្លែស្រស់អន្លក់ (ពពាយ ត្រសក់ ស្ពៃស្រស់)']
+            ingredients: ['200g grilled fish', '100g sliced boiled chicken breast', 'Fresh raw vegetables (cucumber, fresh greens)']
           }
         });
       } else {
         setMenu({
           breakfast: {
-            name: 'បាយសាច់ជ្រូកអាំងពិសេស (ម្ហូបខ្មែរទូទៅ)',
+            name: 'Special Grilled Pork Rice (Standard balanced)',
             calories: bCal,
-            ingredients: ['បាយស ១ ចានតូច', 'សាច់ជ្រូកអាំងគ្រឿងខ្មែរ ១០០ ក្រាម', 'ស៊ុតចៀន ១ គ្រាប់', 'ជ្រក់ត្រសក់ ការ៉ុត ខ្ទឹមក្រហម']
+            ingredients: ['1 small bowl of white rice', '100g grilled marinated pork', '1 fried egg', 'Pickled cucumbers, carrots, shallots']
           },
           lunch: {
-            name: 'សម្លម្ជូរគ្រឿងសាច់គោ និងបាយសកម្រិតមធ្យម',
+            name: 'Beef Lemongrass Sour Soup & White Rice',
             calories: lCal,
-            ingredients: ['បាយស ១ ចានមធ្យម', 'សម្លម្ជូរគ្រឿងសាច់គោជាមួយត្រកួន និងព្រលិត ១ ចានធំ', 'សាច់គោសុទ្ធ ១០០ ក្រាម']
+            ingredients: ['1 medium bowl of white rice', '1 large bowl of beef lemongrass sour soup with water spinach', '100g lean beef']
           },
           dinner: {
-            name: 'ត្រីបំពងទឹកត្រីស្វាយ និងសម្លប្រហើរខ្មែរ',
+            name: 'Fried Fish with Green Mango Dip & Mixed Vegetable Soup',
             calories: dCal,
-            ingredients: ['បាយស ១ ចានតូច', 'ត្រីកំភ្លាញ ឬត្រីអណ្ដែងបំពង (ប្រេងតិច) ១ ខ្ទះតូច', 'សម្លប្រហើរបន្លែចម្រុះក្តៅៗ']
+            ingredients: ['1 small bowl of white rice', '1 small fried fish (low oil)', 'Warm mixed vegetable soup']
           }
         });
       }
@@ -90,32 +90,32 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
   return (
     <div className="suggest-view">
       <div className="header-container" style={{ marginBottom: '16px' }}>
-        <h3>💡 មុខម្ហូបណែនាំប្រចាំថ្ងៃ</h3>
+        <h3>💡 Daily Meal Suggestions</h3>
         <span style={{ fontSize: '12px', background: 'var(--color-primary-glow)', color: 'var(--color-primary)', padding: '4px 10px', borderRadius: '20px', fontWeight: 600 }}>
           🎯 {targetCal} kcal
         </span>
       </div>
 
       <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginBottom: '16px', lineHeight: 1.5 }}>
-        រៀបចំមុខម្ហូបប្រចាំថ្ងៃដោយស្វ័យប្រវត្តិតាមចំណង់ចំណូលចិត្ត គ្រឿងផ្សំងាយរកបំផុតនៅផ្សារខ្មែរ ក្នុងតម្លៃសមរម្យ និងស័ក្តិសមជាមួយកម្រិតកាឡូរីរបស់អ្នក!
+        Automatically prepare a daily meal plan based on your preferences, using easy-to-find ingredients that fit your calorie budget perfectly!
       </p>
 
       {/* Preference Selector Chips */}
       <div className="pref-chips-row">
         <button className={`pref-chip ${pref === 'veg' ? 'active' : ''}`} onClick={() => setPref('veg')}>
-          🥗 បន្លែច្រើន (High Veg)
+          🥗 High Veg
         </button>
         <button className={`pref-chip ${pref === 'meat' ? 'active' : ''}`} onClick={() => setPref('meat')}>
-          🥩 សាច់ច្រើន (High Meat)
+          🥩 High Meat
         </button>
         <button className={`pref-chip ${pref === 'normal' ? 'active' : ''}`} onClick={() => setPref('normal')}>
-          🍲 ម្ហូបធម្មតា (Standard Khmer)
+          🍲 Standard Balanced
         </button>
       </div>
 
       <button className="button-primary" onClick={generateSuggestions} disabled={loading}>
         <ChefHat size={18} />
-        <span>{loading ? 'កំពុងរៀបចំមុខម្ហូប...' : 'បង្កើតមុខម្ហូបណែនាំ'}</span>
+        <span>{loading ? 'Preparing meals...' : 'Generate Meal Suggestion'}</span>
       </button>
 
       {/* Render States */}
@@ -123,7 +123,7 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
         <div className="loader-container">
           <div className="spinner" />
           <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-            កំពុងគណនា និងចងក្រងមុខម្ហូបខ្មែរសម្រកទម្ងន់...
+            Calculating and compiling weight loss meal plan...
           </p>
         </div>
       )}
@@ -134,7 +134,7 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
           {/* Breakfast */}
           <div className="card" style={{ borderLeft: '4px solid var(--color-primary)' }}>
             <h4 style={{ color: 'var(--color-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>🍳 អាហារពេលព្រឹក (Breakfast)</span>
+              <span>🍳 Breakfast</span>
               <span style={{ fontSize: '12px', color: 'white', fontWeight: 600 }}>
                 {menu.breakfast.calories} kcal
               </span>
@@ -155,7 +155,7 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
           {/* Lunch */}
           <div className="card" style={{ borderLeft: '4px solid var(--color-secondary)' }}>
             <h4 style={{ color: 'var(--color-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>🍛 អាហារពេលថ្ងៃត្រង់ (Lunch)</span>
+              <span>🍛 Lunch</span>
               <span style={{ fontSize: '12px', color: 'white', fontWeight: 600 }}>
                 {menu.lunch.calories} kcal
               </span>
@@ -176,7 +176,7 @@ export const Suggest: React.FC<SuggestProps> = ({ targetCal }) => {
           {/* Dinner */}
           <div className="card" style={{ borderLeft: '4px solid var(--color-accent)' }}>
             <h4 style={{ color: 'var(--color-accent)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span>🍲 អាហារពេលល្ងាច (Dinner)</span>
+              <span>🍲 Dinner</span>
               <span style={{ fontSize: '12px', color: 'white', fontWeight: 600 }}>
                 {menu.dinner.calories} kcal
               </span>

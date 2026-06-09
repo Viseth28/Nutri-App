@@ -17,12 +17,12 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
   const [addSuccess, setAddSuccess] = useState(false);
 
   const popularFoods = [
-    { label: '🥩 បាយសាច់ជ្រូក', query: 'បាយសាច់ជ្រូកអាំង ១ចាន' },
-    { label: '🍜 គុយទាវសាច់ជ្រូក', query: 'គុយទាវសាច់ជ្រូក ១ចាន' },
-    { label: '☕ កាហ្វេទឹកដោះគោ', query: 'កាហ្វេទឹកដោះគោទឹកកក ១កែវ' },
-    { label: '🥤 តែទឹកដោះគោ', query: 'តែទឹកដោះគោគុជ ១កែវ' },
-    { label: '🥗 ញាំមាន់', query: 'ញាំមាន់ម្ហូបខ្មែរ ១ចាន' },
-    { label: '🍳 ពងទាចៀន', query: 'ពងទាចៀនប្រេងតិច ១គ្រាប់' }
+    { label: '🥩 Pork Rice', query: '1 plate of grilled pork rice' },
+    { label: '🍜 Pork Noodle Soup', query: '1 bowl of pork noodle soup' },
+    { label: '☕ Milk Coffee', query: '1 glass of iced milk coffee' },
+    { label: '🥤 Bubble Tea', query: '1 cup of bubble tea with pearls' },
+    { label: '🥗 Chicken Salad', query: '1 plate of chicken salad' },
+    { label: '🍳 Fried Egg', query: '1 fried egg with light oil' }
   ];
 
   const handleSearch = async (queryStr: string) => {
@@ -37,11 +37,11 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
       if (res.ok && res.food) {
         setSearchResult(res.food);
       } else {
-        setErrorMsg(res.error || 'មិនអាចស្វែងរកព័ត៌មានអាហារនេះបានទេ។');
+        setErrorMsg(res.error || 'Could not search for this food information.');
       }
     } catch (err: any) {
       console.error('Error searching food:', err);
-      setErrorMsg('មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ម៉ាស៊ីនបម្រើ។');
+      setErrorMsg('Error connecting to server.');
     } finally {
       setLoading(false);
     }
@@ -77,10 +77,10 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
           onLogSuccess();
         }, 1500);
       } else {
-        alert(res.error || 'មិនអាចបន្ថែមកំណត់ត្រាបានទេ');
+        alert(res.error || 'Could not add log.');
       }
     } catch (err) {
-      alert('មានបញ្ហា៖ ' + err);
+      alert('Error: ' + err);
     } finally {
       setAddLoading(false);
     }
@@ -90,7 +90,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
     <div className="food-search-view" style={{ animation: 'fadeIn 0.3s ease-out' }}>
       {/* Header */}
       <div className="header-container" style={{ marginBottom: '16px' }}>
-        <h3>🔍 ស្វែងរកព័ត៌មានអាហារ</h3>
+        <h3>🔍 Search Food Information</h3>
         <Search size={20} style={{ color: 'var(--color-primary)' }} />
       </div>
 
@@ -101,7 +101,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="ស្វែងរកអាហារ (ឧទាហរណ៍: បាយមាន់ ឬ ស៊ុប...)"
+            placeholder="Search food (e.g. chicken rice, salad, soup...)"
             className="form-input"
             style={{ paddingRight: '50px', borderRadius: 'var(--radius-lg)' }}
             disabled={loading}
@@ -135,7 +135,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
       {/* Popular Chips */}
       <div style={{ marginBottom: '24px' }}>
         <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '8px', fontWeight: 600 }}>
-          💡 ម្ហូបពេញនិយម (Quick Tap)
+          💡 Popular Choices (Quick Tap)
         </span>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {popularFoods.map((item) => (
@@ -158,7 +158,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
         <div className="loader-container">
           <div className="spinner" />
           <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-            Gemini កំពុងវិភាគ និងទាញយកទិន្នន័យអាហារ...
+            Gemini is analyzing and retrieving food data...
           </p>
         </div>
       )}
@@ -182,7 +182,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
           {/* Calorie Large Display */}
           <div style={{ textAlign: 'center', margin: '20px 0' }}>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              តម្លៃថាមពលប៉ាន់ស្មាន
+              Estimated Calories
             </span>
             <strong style={{ fontSize: '38px', fontFamily: 'var(--font-heading)', color: 'var(--color-primary)', display: 'block', lineHeight: 1 }}>
               {searchResult.calories} <span style={{ fontSize: '16px', fontWeight: 'normal' }}>Cal</span>
@@ -192,19 +192,19 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
           {/* Macros Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '20px' }}>
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 4px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.02)' }}>
-              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥩 ប្រូតេអ៊ីន</span>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥩 Protein</span>
               <strong style={{ fontSize: '13px', color: 'white' }}>{searchResult.protein}g</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 4px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.02)' }}>
-              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🌾 កាបូ</span>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🌾 Carbs</span>
               <strong style={{ fontSize: '13px', color: 'white' }}>{searchResult.carbs}g</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 4px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.02)' }}>
-              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥑 ខ្លាញ់</span>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥑 Fat</span>
               <strong style={{ fontSize: '13px', color: 'white' }}>{searchResult.fat}g</strong>
             </div>
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '10px 4px', borderRadius: '10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.02)' }}>
-              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥤 ស្ករ</span>
+              <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block' }}>🥤 Sugar</span>
               <strong style={{ fontSize: '13px', color: 'white' }}>{searchResult.sugar}g</strong>
             </div>
           </div>
@@ -212,7 +212,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
           {/* Coaching Recommendation */}
           {searchResult.coaching_recommendation && (
             <div style={{ background: 'rgba(244, 63, 94, 0.03)', border: '1px solid rgba(244, 63, 94, 0.12)', padding: '12px 14px', borderRadius: 'var(--radius-md)', marginBottom: '20px', fontSize: '12px', lineHeight: 1.5, color: 'var(--text-muted)' }}>
-              <span style={{ color: 'var(--color-primary)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>💡 ដំបូន្មានរបស់ AI:</span>
+              <span style={{ color: 'var(--color-primary)', fontWeight: 700, display: 'block', marginBottom: '4px' }}>💡 AI Coaching Tip:</span>
               {searchResult.coaching_recommendation}
             </div>
           )}
@@ -228,12 +228,12 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
               {addLoading ? (
                 <>
                   <Loader2 size={16} className="spinner" />
-                  <span>កំពុងកត់ត្រា...</span>
+                  <span>Logging...</span>
                 </>
               ) : (
                 <>
                   <Plus size={16} />
-                  <span>បន្ថែមទៅកំណត់ត្រាអាហារថ្ងៃនេះ</span>
+                  <span>Add to Today's Logs</span>
                 </>
               )}
             </button>
@@ -255,7 +255,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
               }}
             >
               <Check size={18} />
-              <span>បានបន្ថែមទៅកំណត់ត្រាថ្ងៃនេះដោយជោគជ័យ!</span>
+              <span>Added to today's logs successfully!</span>
             </div>
           )}
         </div>

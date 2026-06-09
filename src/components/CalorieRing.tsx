@@ -68,7 +68,7 @@ export const CalorieRing: React.FC<CalorieRingProps> = ({ eaten, burned, target 
         <span className="ring-center-val" style={{ color: remaining > 0 ? 'var(--text-primary)' : 'var(--color-primary)' }}>
           {remaining}
         </span>
-        <span className="ring-center-lbl">Kcal សល់</span>
+        <span className="ring-center-lbl">kcal remaining</span>
       </div>
     </div>
   );

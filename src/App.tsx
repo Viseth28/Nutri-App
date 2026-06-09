@@ -124,7 +124,7 @@ const App: React.FC = () => {
       setErrorMsg(null);
     } catch (err: any) {
       console.error("Error retrieving user database logs:", err);
-      setErrorMsg("មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធទិន្នន័យបានឡើយ។");
+      setErrorMsg("Unable to connect to the database.");
     } finally {
       setLoading(false);
     }
@@ -152,10 +152,10 @@ const App: React.FC = () => {
         if (res.new_goal) setTargetCal(res.new_goal);
         await loadDashboardData(userId);
       } else {
-        alert(res.error || "បរាជ័យក្នុងការរក្សាទុក");
+        alert(res.error || "Failed to save");
       }
     } catch (err) {
-      alert("មានបញ្ហា៖ " + err);
+      alert("Error: " + err);
     } finally {
       setLoading(false);
     }
@@ -174,10 +174,10 @@ const App: React.FC = () => {
         }
         await loadDashboardData(userId);
       } else {
-        alert(res.error || "បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាព");
+        alert(res.error || "Failed to update");
       }
     } catch (err) {
-      alert("មានបញ្ហា៖ " + err);
+      alert("Error: " + err);
     } finally {
       setLoading(false);
     }
@@ -201,7 +201,7 @@ const App: React.FC = () => {
         setNoSweetToday(newVal);
       }
     } catch (err) {
-      alert("មានបញ្ហាក្នុងការកត់ត្រា៖ " + err);
+      alert("Error logging: " + err);
     }
   };
 
@@ -216,10 +216,10 @@ const App: React.FC = () => {
           setLogs(logs.filter(item => item.id !== id));
           await loadDashboardData(userId);
         } else {
-          alert(res.error || "បរាជ័យក្នុងការលុប");
+          alert(res.error || "Failed to delete");
         }
       } catch (err) {
-        alert("មានបញ្ហា៖ " + err);
+        alert("Error: " + err);
       } finally {
         setLoading(false);
       }
@@ -246,10 +246,10 @@ const App: React.FC = () => {
       if (res.ok) {
         await loadDashboardData(userId);
       } else {
-        alert(res.error || "AI មិនអាចវិភាគអាហារនេះបានទេ។");
+        alert(res.error || "AI cannot analyze this food.");
       }
     } catch (err) {
-      alert("មានបញ្ហាក្នុងការវិភាគ៖ " + err);
+      alert("Error analyzing: " + err);
     } finally {
       setFoodText('');
       setLoading(false);
@@ -268,10 +268,10 @@ const App: React.FC = () => {
         if (res.ok) {
           await loadDashboardData(userId);
         } else {
-          alert(res.error || "មិនអាចកត់ត្រាការដុតកាឡូរីបានឡើយ");
+          alert(res.error || "Unable to log burned calories.");
         }
       } catch (err) {
-        alert("មានបញ្ហា៖ " + err);
+        alert("Error: " + err);
       } finally {
         setExerciseCal('');
         setLoading(false);
@@ -305,10 +305,10 @@ const App: React.FC = () => {
         setManualSugar('');
         await loadDashboardData(userId);
       } else {
-        alert(res.error || "មិនអាចកត់ត្រាអាហារបានទេ");
+        alert(res.error || "Unable to log food.");
       }
     } catch (err) {
-      alert("មានបញ្ហា៖ " + err);
+      alert("Error: " + err);
     } finally {
       setLoading(false);
     }
@@ -349,11 +349,11 @@ const App: React.FC = () => {
             coaching_recommendation: res.meal.coaching_recommendation
           });
         } else {
-          alert(res.error || "មិនអាចវិភាគរូបភាពបានឡើយ");
+          alert(res.error || "Unable to analyze image.");
           setCameraImage(null);
         }
       } catch (err) {
-        alert("មានបញ្ហា៖ " + err);
+        alert("Error: " + err);
         setCameraImage(null);
       } finally {
         setCameraLoading(false);
@@ -379,10 +379,10 @@ const App: React.FC = () => {
       if (res.ok) {
         await loadDashboardData(userId);
       } else {
-        alert(res.error || "មិនអាចកត់ត្រាអាហារបានទេ");
+        alert(res.error || "Unable to log food.");
       }
     } catch (err) {
-      alert("មានបញ្ហា៖ " + err);
+      alert("Error: " + err);
     } finally {
       setCameraResult(null);
       setCameraImage(null);
@@ -415,7 +415,7 @@ const App: React.FC = () => {
         <div className="loader-container" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(10, 10, 15, 0.75)', backdropFilter: 'blur(8px)', zIndex: 9999, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
           <div className="spinner" />
           <p style={{ fontSize: '13px', color: 'var(--color-primary)', fontWeight: 600, letterSpacing: '0.5px' }}>
-            កំពុងភ្ជាប់ប្រព័ន្ធ និងទាញយកទិន្នន័យ...
+            Connecting and fetching data...
           </p>
         </div>
       )}
@@ -444,7 +444,7 @@ const App: React.FC = () => {
                 const res = await api.getWeeklyData(userId, start, end);
                 setWeeklyData(res);
               } catch (e) {
-                alert("មិនអាចទាញយកទិន្នន័យបានឡើយ៖ " + e);
+                alert("Failed to fetch data: " + e);
               } finally {
                 setLoading(false);
               }
@@ -455,7 +455,7 @@ const App: React.FC = () => {
                 const res = await api.getWeeklyData(userId);
                 setWeeklyData(res);
               } catch (e) {
-                alert("មិនអាចទាញយកទិន្នន័យបានឡើយ៖ " + e);
+                alert("Failed to fetch data: " + e);
               } finally {
                 setLoading(false);
               }
@@ -497,17 +497,17 @@ const App: React.FC = () => {
       <div className="bottom-nav">
         <div className={`nav-tab ${activeTab === 'home' ? 'active' : ''}`} onClick={() => setActiveTab('home')}>
           <Home className="nav-tab-icon" size={22} />
-          <span>ទំព័រដើម</span>
+          <span>Dashboard</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'weekly' ? 'active' : ''}`} onClick={() => setActiveTab('weekly')}>
           <Calendar className="nav-tab-icon" size={22} />
-          <span>របាយការណ៍</span>
+          <span>Report</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'suggest' ? 'active' : ''}`} onClick={() => setActiveTab('suggest')}>
           <ChefHat className="nav-tab-icon" size={22} />
-          <span>ណែនាំម្ហូប</span>
+          <span>Meal Plan</span>
         </div>
 
         {/* Center Logging CTA Button */}
@@ -517,17 +517,17 @@ const App: React.FC = () => {
 
         <div className={`nav-tab ${activeTab === 'search' ? 'active' : ''}`} onClick={() => setActiveTab('search')}>
           <Search className="nav-tab-icon" size={22} />
-          <span>ស្វែងរក</span>
+          <span>Search</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'weight' ? 'active' : ''}`} onClick={() => setActiveTab('weight')}>
           <Scale className="nav-tab-icon" size={22} />
-          <span>ទម្ងន់</span>
+          <span>Weight</span>
         </div>
 
         <div className={`nav-tab ${activeTab === 'profile' ? 'active' : ''}`} onClick={() => setActiveTab('profile')}>
           <UserIcon className="nav-tab-icon" size={22} />
-          <span>ប្រវត្តិរូប</span>
+          <span>Profile</span>
         </div>
       </div>
 
@@ -536,23 +536,23 @@ const App: React.FC = () => {
         <div className="modal-overlay" onClick={() => setIsLogModalOpen(false)}>
           <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>✍️ កត់ត្រាសកម្មភាព</h3>
+              <h3>✍️ Record Activity</h3>
               <button className="close-btn" onClick={() => setIsLogModalOpen(false)}>✕</button>
             </div>
 
             {/* Log form type switcher tabs */}
             <div className="segmented-control" style={{ marginBottom: '20px' }}>
               <button className={`segment-btn ${logType === 'food' ? 'active' : ''}`} onClick={() => setLogType('food')}>
-                📝 AI អត្ថបទ
+                📝 AI Text
               </button>
               <button className={`segment-btn ${logType === 'camera' ? 'active' : ''}`} onClick={() => setLogType('camera')}>
-                📷 AI រូបភាព
+                📷 AI Image
               </button>
               <button className={`segment-btn ${logType === 'manual_food' ? 'active' : ''}`} onClick={() => setLogType('manual_food')}>
-                ✍️ កត់ផ្ទាល់
+                ✍️ Manual
               </button>
               <button className={`segment-btn ${logType === 'exercise' ? 'active' : ''}`} onClick={() => setLogType('exercise')}>
-                🔥 ហាត់ប្រាណ
+                🔥 Workout
               </button>
             </div>
 
@@ -560,19 +560,19 @@ const App: React.FC = () => {
             {logType === 'food' && (
               <form onSubmit={handleTextLogSubmit}>
                 <div className="input-group">
-                  <span className="input-label">រៀបរាប់ពីអាហារដែលអ្នកបានញ៉ាំ</span>
+                  <span className="input-label">Describe what you ate</span>
                   <input
                     type="text"
                     required
                     value={foodText}
                     onChange={(e) => setFoodText(e.target.value)}
-                    placeholder="ឧទាហរណ៍: បាយសាច់ជ្រូកអាំង ១ចាន ឬ ស៊ុតស្ងោរ ២គ្រាប់"
+                    placeholder="Example: 1 plate of grilled pork rice, or 2 boiled eggs"
                     className="form-input"
                   />
                 </div>
                 <button type="submit" className="button-primary">
                   <Sparkles size={16} />
-                  <span>វិភាគ និងកត់ត្រាអាហារ</span>
+                  <span>Analyze & Log Food</span>
                 </button>
               </form>
             )}
@@ -590,8 +590,8 @@ const App: React.FC = () => {
                 {!cameraImage && !cameraLoading && (
                   <div className="image-preview-box" onClick={handleTriggerCameraUpload}>
                     <Camera size={40} style={{ color: 'var(--text-muted)' }} />
-                    <span style={{ fontSize: '13px', fontWeight: 600 }}>ថតរូបភាពអាហារ ឬបញ្ចូលរូប</span>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Gemini នឹងវិភាគកាឡូរីភ្លាមៗ</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600 }}>Take food photo or upload image</span>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Gemini will analyze calories instantly</span>
                   </div>
                 )}
 
@@ -599,7 +599,7 @@ const App: React.FC = () => {
                   <div className="loader-container">
                     <div className="spinner" />
                     <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-                      Gemini កំពុងស្កែន និងវិភាគសារធាតុចិញ្ចឹម...
+                      Gemini is scanning and analyzing nutrients...
                     </p>
                   </div>
                 )}
@@ -612,13 +612,13 @@ const App: React.FC = () => {
                     />
                     
                     <div className="card" style={{ marginBottom: 0, border: '1px solid var(--border-glass-highlight)' }}>
-                      <h4 style={{ color: 'var(--color-primary)' }}>📊 លទ្ធផលវិភាគរបស់ AI</h4>
+                      <h4 style={{ color: 'var(--color-primary)' }}>📊 AI Analysis Results</h4>
                       <strong style={{ fontSize: '15px', display: 'block', margin: '8px 0' }}>{cameraResult.name}</strong>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '12px' }}>
-                        <div>🔥 កាឡូរី៖ <b>{cameraResult.calories} Cal</b></div>
-                        <div>🥩 ប្រូតេអ៊ីន៖ <b>{cameraResult.protein}g</b></div>
-                        <div>🌾 កាបូអ៊ីដ្រាត៖ <b>{cameraResult.carbs}g</b></div>
-                        <div>🥑 ខ្លាញ់៖ <b>{cameraResult.fat}g</b></div>
+                        <div>🔥 Calories: <b>{cameraResult.calories} Cal</b></div>
+                        <div>🥩 Protein: <b>{cameraResult.protein}g</b></div>
+                        <div>🌾 Carbs: <b>{cameraResult.carbs}g</b></div>
+                        <div>🥑 Fat: <b>{cameraResult.fat}g</b></div>
                       </div>
                     </div>
 
@@ -628,10 +628,10 @@ const App: React.FC = () => {
                         style={{ background: 'rgba(255,255,255,0.05)', color: 'white' }}
                         onClick={() => { setCameraImage(null); setCameraResult(null); }}
                       >
-                        ថតរូបឡើងវិញ
+                        Retake Photo
                       </button>
                       <button className="button-primary" onClick={handleSaveCameraResult}>
-                        រក្សាទុកកំណត់ត្រា
+                        Save Log
                       </button>
                     </div>
                   </div>
@@ -642,19 +642,19 @@ const App: React.FC = () => {
             {logType === 'manual_food' && (
               <form onSubmit={handleManualFoodSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div className="input-group">
-                  <span className="input-label">ឈ្មោះអាហារ</span>
+                  <span className="input-label">Food Name</span>
                   <input
                     type="text"
                     required
                     value={manualFoodName}
                     onChange={(e) => setManualFoodName(e.target.value)}
-                    placeholder="ឧទាហរណ៍: បាយឆាសាច់ជ្រូក"
+                    placeholder="Example: Pork Fried Rice"
                     className="form-input"
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                   <div className="input-group">
-                    <span className="input-label">ថាមពល (Cal)</span>
+                    <span className="input-label">Calories (Cal)</span>
                     <input
                       type="number"
                       required
@@ -665,7 +665,7 @@ const App: React.FC = () => {
                     />
                   </div>
                   <div className="input-group">
-                    <span className="input-label">ប្រូតេអ៊ីន (g)</span>
+                    <span className="input-label">Protein (g)</span>
                     <input
                       type="number"
                       value={manualProtein}
@@ -677,7 +677,7 @@ const App: React.FC = () => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
                   <div className="input-group">
-                    <span className="input-label">កាបូអ៊ីដ្រាត (g)</span>
+                    <span className="input-label">Carbs (g)</span>
                     <input
                       type="number"
                       value={manualCarbs}
@@ -687,7 +687,7 @@ const App: React.FC = () => {
                     />
                   </div>
                   <div className="input-group">
-                    <span className="input-label">ខ្លាញ់សរុប (g)</span>
+                    <span className="input-label">Total Fat (g)</span>
                     <input
                       type="number"
                       value={manualFat}
@@ -697,7 +697,7 @@ const App: React.FC = () => {
                     />
                   </div>
                   <div className="input-group">
-                    <span className="input-label">ស្ករ (g)</span>
+                    <span className="input-label">Sugar (g)</span>
                     <input
                       type="number"
                       value={manualSugar}
@@ -708,7 +708,7 @@ const App: React.FC = () => {
                   </div>
                 </div>
                 <button type="submit" className="button-primary" style={{ marginTop: '8px' }}>
-                  <span>រក្សាទុកកំណត់ត្រា</span>
+                  <span>Save Log</span>
                 </button>
               </form>
             )}
@@ -716,19 +716,19 @@ const App: React.FC = () => {
             {logType === 'exercise' && (
               <form onSubmit={handleExerciseSubmit}>
                 <div className="input-group">
-                  <span className="input-label">កាឡូរីដែលបានដុតរំលាយ (Cal)</span>
+                  <span className="input-label">Calories Burned (Cal)</span>
                   <input
                     type="number"
                     required
                     value={exerciseCal}
                     onChange={(e) => setExerciseCal(e.target.value)}
-                    placeholder="ឧទាហរណ៍: 300"
+                    placeholder="Example: 300"
                     className="form-input"
                   />
                 </div>
                 <button type="submit" className="button-primary">
                   <Flame size={16} />
-                  <span>កត់ត្រាការដុតកាឡូរី</span>
+                  <span>Log Burned Calories</span>
                 </button>
               </form>
             )}

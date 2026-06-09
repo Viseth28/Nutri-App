@@ -57,7 +57,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="legend-dot eaten" />
               <div className="legend-details">
                 <span className="legend-val">{totalEaten} kcal</span>
-                <span className="legend-lbl">បានញ៉ាំ (Eaten)</span>
+                <span className="legend-lbl">Consumed</span>
               </div>
             </div>
             
@@ -65,7 +65,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="legend-dot burned" />
               <div className="legend-details">
                 <span className="legend-val">{burned} kcal</span>
-                <span className="legend-lbl">បានដុត (Burned)</span>
+                <span className="legend-lbl">Burned</span>
               </div>
             </div>
             
@@ -73,7 +73,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <span className="legend-dot target" />
               <div className="legend-details">
                 <span className="legend-val">{target} kcal</span>
-                <span className="legend-lbl">គោលដៅ (Target)</span>
+                <span className="legend-lbl">Goal</span>
               </div>
             </div>
           </div>
@@ -89,15 +89,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
         <div className="macro-labels">
           <div className="macro-lbl-item">
             <span className="macro-dot p" />
-            <span>ប្រូតេអ៊ីន: {totalProtein}g ({Math.round(pPercent)}%)</span>
+            <span>Protein: {totalProtein}g ({Math.round(pPercent)}%)</span>
           </div>
           <div className="macro-lbl-item">
             <span className="macro-dot c" />
-            <span>កាបូ: {totalCarbs}g ({Math.round(cPercent)}%)</span>
+            <span>Carbs: {totalCarbs}g ({Math.round(cPercent)}%)</span>
           </div>
           <div className="macro-lbl-item">
             <span className="macro-dot f" />
-            <span>ខ្លាញ់: {totalFat}g ({Math.round(fPercent)}%)</span>
+            <span>Fat: {totalFat}g ({Math.round(fPercent)}%)</span>
           </div>
         </div>
       </div>
@@ -112,7 +112,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             <div>
               <span className="challenge-title">No Sweet Challenge</span>
               <p className="challenge-desc">
-                {noSweetToday ? '🥤 សម្រេចបានថ្ងៃនេះ (Sweet Free!) ✅' : '🥤 មិនទាន់បានកត់ត្រានៅឡើយទេ ⏳'}
+                {noSweetToday ? '🥤 Sweet-Free Challenge completed today! ✅' : '🥤 Not logged today yet ⏳'}
               </p>
             </div>
           </div>
@@ -125,7 +125,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
       {/* 3. Meal Logs Section */}
       <div className="header-container" style={{ margin: '24px 0 12px 0' }}>
-        <h3>📖 កំណត់ត្រាអាហារថ្ងៃនេះ</h3>
+        <h3>📖 Today's Food Journal</h3>
         {logs.length > 0 && (
           <button 
             onClick={onClearLogs} 
@@ -133,7 +133,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             style={{ fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 10px' }}
           >
             <Trash2 size={13} />
-            <span>Reset ថ្ងៃនេះ</span>
+            <span>Reset Today</span>
           </button>
         )}
       </div>
@@ -150,9 +150,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
             cursor: 'pointer'
           }}
         >
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>មិនទាន់មានកំណត់ត្រាអាហារនៅឡើយទេ</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '13px' }}>No meals logged today yet.</p>
           <span style={{ color: 'var(--color-primary)', fontSize: '12px', fontWeight: 600, display: 'block', marginTop: '8px' }}>
-            + បន្ថែមអាហារដំបូងរបស់អ្នក
+            + Add your first meal
           </span>
         </div>
       ) : (

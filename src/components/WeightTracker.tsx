@@ -31,14 +31,14 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
   return (
     <div className="weight-tracker-view">
       <div className="header-container" style={{ marginBottom: '16px' }}>
-        <h3>⚖️ តាមដានទម្ងន់ខ្លួន</h3>
+        <h3>⚖️ Weight Tracker</h3>
         <Scale size={20} style={{ color: 'var(--color-primary)' }} />
       </div>
 
       {/* 1. Comparison Dashboard */}
       <div className="card card-highlight">
         <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span>បច្ចុប្បន្នភាពទម្ងន់</span>
+          <span>Weight Progress</span>
         </h4>
         
         <div className="weight-comparison-container">
@@ -46,14 +46,14 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
             <span className="weight-comp-val" style={{ color: 'var(--text-primary)' }}>
               {previousWeight !== null ? `${previousWeight} kg` : '--'}
             </span>
-            <p className="weight-comp-lbl">ទម្ងន់លើកមុន</p>
+            <p className="weight-comp-lbl">Previous Weight</p>
           </div>
           
           <div className="weight-comparison-box" style={{ borderColor: 'var(--border-glass-highlight)' }}>
             <span className="weight-comp-val" style={{ color: 'var(--color-primary)' }}>
               {currentWeight} kg
             </span>
-            <p className="weight-comp-lbl">ទម្ងន់បច្ចុប្បន្ន</p>
+            <p className="weight-comp-lbl">Current Weight</p>
           </div>
         </div>
 
@@ -74,27 +74,27 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
               gap: '6px'
             }}
           >
-            <span>{difference < 0 ? '🎉 ស្រកទម្ងន់អស់៖' : '⚠️ ឡើងទម្ងន់បន្ថែម៖'}</span>
+            <span>{difference < 0 ? '🎉 Weight Lost:' : '⚠️ Weight Gained:'}</span>
             <span style={{ color: difference < 0 ? 'var(--color-primary)' : 'var(--color-error)' }}>
               {difference < 0 ? `${Math.abs(difference).toFixed(1)} kg` : `+${difference.toFixed(1)} kg`}
             </span>
-            <span>សម្រេចបានលទ្ធផលល្អ!</span>
+            <span>Great progress!</span>
           </div>
         )}
       </div>
 
       {/* 2. Weight Logging Form */}
       <div className="card">
-        <h4>✍️ កត់ត្រាទម្ងន់ថ្មី</h4>
+        <h4>✍️ Log New Weight</h4>
         <form onSubmit={handleSubmit} style={{ marginTop: '14px' }}>
           <div className="input-group">
-            <span className="input-label">ទម្ងន់ថ្មី (គិតជាគីឡូក្រាម - kg)</span>
+            <span className="input-label">New Weight (kg)</span>
             <div style={{ position: 'relative' }}>
               <input
                 type="number"
                 step="0.1"
                 required
-                placeholder="ឧទាហរណ៍: 92.5"
+                placeholder="Example: 92.5"
                 value={weightInput}
                 onChange={(e) => setWeightInput(e.target.value)}
                 className="form-input"
@@ -108,7 +108,7 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
 
           <button type="submit" className="button-primary">
             <RefreshCw size={16} />
-            <span>ធ្វើបច្ចុប្បន្នភាពទម្ងន់</span>
+            <span>Update Weight</span>
           </button>
         </form>
       </div>
@@ -127,7 +127,7 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
             animation: 'slideUp 0.3s ease-out'
           }}
         >
-          ✅ រក្សាទុកទម្ងន់ និងគណនាកាឡូរីគោលដៅឡើងវិញដោយជោគជ័យ!
+          ✅ Weight saved and daily calories recalibrated successfully!
         </div>
       )}
 
@@ -135,10 +135,10 @@ export const WeightTracker: React.FC<WeightTrackerProps> = ({
       <div className="card" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.01), rgba(16,185,129,0.02))' }}>
         <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--color-primary)' }}>
           <Sparkles size={16} />
-          <span>បច្ចេកវិទ្យា TDEE Recalibration</span>
+          <span>TDEE Recalibration Technology</span>
         </h4>
         <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px', lineHeight: 1.5 }}>
-          រាល់ពេលដែលអ្នកធ្វើបច្ចុប្បន្នភាពទម្ងន់ខ្លួន ប្រព័ន្ធឆ្លាតវៃនឹងធ្វើការគណនាឡើងវិញភ្លាមៗនូវកម្រិត <b>BMR (Basal Metabolic Rate)</b> និង <b>TDEE (Total Daily Energy Expenditure)</b> ដោយប្រើប្រាស់រូបមន្ត <b>Mifflin-St Jeor</b> ដ៏ច្បាស់លាស់។ គោលដៅកាឡូរីប្រចាំថ្ងៃរបស់អ្នកនឹងកែសម្រួលដោយស្វ័យប្រវត្តិដើម្បីធានាការសម្រកទម្ងន់មានសុវត្ថិភាព និងប្រសិទ្ធភាពខ្ពស់!
+          Every time you update your body weight, the smart system immediately recalculates your <b>BMR (Basal Metabolic Rate)</b> and <b>TDEE (Total Daily Energy Expenditure)</b> using the precise <b>Mifflin-St Jeor</b> equation. Your daily calorie target will adjust automatically to ensure safe and highly effective weight progress!
         </p>
       </div>
     </div>

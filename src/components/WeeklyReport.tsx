@@ -38,7 +38,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
       <div className="loader-container">
         <div className="spinner" />
         <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-          កំពុងទាញយករបាយការណ៍...
+          Fetching progress report...
         </p>
       </div>
     );
@@ -56,15 +56,15 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
   return (
     <div className="weekly-report-view" style={{ animation: 'fadeIn 0.3s ease-out' }}>
       <div className="header-container" style={{ marginBottom: '16px' }}>
-        <h3>📊 របាយការណ៍វឌ្ឍនភាព</h3>
+        <h3>📊 Progress Report</h3>
         <span style={{ fontSize: '11px', background: 'var(--color-primary-glow)', color: 'var(--color-primary)', padding: '4px 10px', borderRadius: '20px', fontWeight: 600 }}>
-          {dayCount} ថ្ងៃ
+          {dayCount} Days
         </span>
       </div>
 
       {/* Date Filter Panel */}
       <div className="card" style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
-        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>📅 ជ្រើសរើសចន្លោះកាលបរិច្ឆេទ (អតិបរមា ៤៥ ថ្ងៃ)</span>
+        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>📅 Select Date Range (Max 45 Days)</span>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           <input 
             type="date" 
@@ -73,7 +73,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
             className="form-input" 
             style={{ padding: '8px 10px', fontSize: '12px', flex: 1, margin: 0, minHeight: '36px' }}
           />
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>ដល់</span>
+          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>to</span>
           <input 
             type="date" 
             value={endDate} 
@@ -88,13 +88,13 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
               if (startDate && endDate) {
                 onFilterChange(startDate, endDate);
               } else {
-                alert("សូមជ្រើសរើសកាលបរិច្ឆេទឱ្យបានត្រឹមត្រូវ!");
+                alert("Please select a valid date range!");
               }
             }}
             className="button-primary"
             style={{ padding: '10px 14px', fontSize: '12px', margin: 0, flex: 2, height: '38px' }}
           >
-            អនុវត្តតម្រង
+            Apply Filter
           </button>
           <button 
             onClick={() => {
@@ -103,7 +103,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
             className="button-primary"
             style={{ padding: '10px 14px', fontSize: '12px', margin: 0, flex: 1, height: '38px', background: 'rgba(255,255,255,0.05)', color: 'white' }}
           >
-            កំណត់ឡើងវិញ
+            Reset
           </button>
         </div>
       </div>
@@ -111,25 +111,25 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
       {/* 1. Overview Stats Grid */}
       <div className="card card-highlight" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', padding: '16px' }}>
         <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)' }}>
-          <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>ញ៉ាំសរុប (Eaten)</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Total Consumed</span>
           <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-primary)' }}>{totalWeeklyEaten} <span style={{ fontSize: '12px', fontWeight: 'normal' }}>Cal</span></span>
-          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>ថវិកាសរុប៖ {weeklyBudget} Cal</span>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>Total Target: {weeklyBudget} Cal</span>
         </div>
         <div style={{ background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)' }}>
-          <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>ដុតសរុប (Burned)</span>
+          <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block', textTransform: 'uppercase' }}>Total Burned</span>
           <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--color-secondary)' }}>{totalWeeklyBurned} <span style={{ fontSize: '12px', fontWeight: 'normal' }}>Cal</span></span>
-          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>ពីសកម្មភាព & Strava</span>
+          <span style={{ fontSize: '9px', color: 'var(--text-muted)', display: 'block', marginTop: '4px' }}>From activities & Strava</span>
         </div>
         <div style={{ gridColumn: 'span 2', background: 'rgba(255,255,255,0.02)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>តុល្យភាពកាឡូរីរួម</span>
+            <span style={{ fontSize: '10px', color: 'var(--text-muted)', display: 'block' }}>Net Calorie Balance</span>
             <strong style={{ fontSize: '14px', color: netWeeklyRemaining >= 0 ? 'var(--color-primary)' : 'var(--color-error)' }}>
-              {netWeeklyRemaining >= 0 ? `សល់ ${netWeeklyRemaining} Cal` : `លើស ${Math.abs(netWeeklyRemaining)} Cal`}
+              {netWeeklyRemaining >= 0 ? `Remaining ${netWeeklyRemaining} Cal` : `Over ${Math.abs(netWeeklyRemaining)} Cal`}
             </strong>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--color-primary-glow)', padding: '6px 12px', borderRadius: '20px', fontSize: '11px', color: 'var(--color-primary)', fontWeight: 600 }}>
             <Award size={14} />
-            <span>🥤 ជោគជ័យ {sweetFreeDays}/{dayCount} ថ្ងៃ</span>
+            <span>🥤 Success: {sweetFreeDays}/{dayCount} Days</span>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
         <div className="card" style={{ padding: '16px 20px' }}>
           <h4 style={{ fontSize: '14px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
             <BarChart3 size={16} style={{ color: 'var(--color-primary)' }} />
-            <span>ក្រាហ្វិកប្រៀបធៀបកាឡូរីប្រចាំថ្ងៃ</span>
+            <span>Daily Calories Comparison Chart</span>
           </h4>
           
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', height: '110px', padding: '10px 0 20px 0', marginBottom: '8px', overflowX: 'auto', gap: '4px' }}>
@@ -174,7 +174,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
       <div className="header-container" style={{ margin: '20px 0 12px 0' }}>
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Calendar size={18} style={{ color: 'var(--color-primary)' }} />
-          <span>កំណត់ត្រាប្រចាំថ្ងៃ</span>
+          <span>Daily Journal Logs</span>
         </h3>
       </div>
 
@@ -223,7 +223,7 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
                     </div>
                     {day.burned > 0 && (
                       <div style={{ fontSize: '10px', color: 'var(--color-secondary)', fontWeight: 600 }}>
-                        🔥 ដុត {day.burned} Cal
+                        🔥 Burned {day.burned} Cal
                       </div>
                     )}
                   </div>
@@ -242,12 +242,12 @@ export const WeeklyReport: React.FC<WeeklyReportProps> = ({
               {isExpanded && (
                 <div style={{ padding: '0 16px 16px 16px', borderTop: '1px solid rgba(255, 255, 255, 0.03)', background: 'rgba(0, 0, 0, 0.15)' }}>
                   <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-primary)', margin: '12px 0 8px 0' }}>
-                    📖 កំណត់ត្រាអាហារ ({day.meals.length})
+                    📖 Food Log ({day.meals.length})
                   </div>
                   
                   {day.meals.length === 0 ? (
                     <div style={{ fontSize: '12px', color: 'var(--text-muted)', padding: '6px 0' }}>
-                      គ្មានកំណត់ត្រាអាហារសម្រាប់ថ្ងៃនេះទេ។
+                      No meals logged for this day.
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
