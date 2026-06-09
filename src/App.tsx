@@ -591,7 +591,7 @@ const App: React.FC = () => {
                   <div className="image-preview-box" onClick={handleTriggerCameraUpload}>
                     <Camera size={40} style={{ color: 'var(--text-muted)' }} />
                     <span style={{ fontSize: '13px', fontWeight: 600 }}>Take food photo or upload image</span>
-                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Gemini will analyze calories instantly</span>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>AI will analyze calories instantly</span>
                   </div>
                 )}
 
@@ -599,7 +599,7 @@ const App: React.FC = () => {
                   <div className="loader-container">
                     <div className="spinner" />
                     <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-                      Gemini is scanning and analyzing nutrients...
+                      AI is scanning and analyzing nutrients...
                     </p>
                   </div>
                 )}

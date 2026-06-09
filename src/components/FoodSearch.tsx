@@ -158,7 +158,7 @@ export const FoodSearch: React.FC<FoodSearchProps> = ({ userId, onLogSuccess }) 
         <div className="loader-container">
           <div className="spinner" />
           <p className="pulsing-circle" style={{ fontSize: '13px', color: 'var(--color-primary)' }}>
-            Gemini is analyzing and retrieving food data...
+            AI is analyzing and retrieving food data...
           </p>
         </div>
       )}
