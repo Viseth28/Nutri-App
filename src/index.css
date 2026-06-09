@@ -359,7 +359,7 @@ input:checked + .slider-switch:before {
 
 /* Custom Bottom Navigation Bar */
 .bottom-nav {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
